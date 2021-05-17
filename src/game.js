@@ -1,6 +1,9 @@
 import Phaser from "phaser"
 import platform from "./assets/platform.png"
-import player from "./assets/player.png"
+import sky from './assets/sky.png'
+import sea from "./assets/sea.png"
+import clouds from "./assets/clouds.png"
+import farGrounds from "./assets/far-grounds.png"
 
 let game
 
@@ -43,6 +46,10 @@ class Preload extends Phaser.Scene {
 
 	preload() {
 		this.load.image("platform", platform)
+    this.load.image("sky", sky)
+    this.load.image("sea", sea)
+    this.load.image("clouds", clouds)
+    this.load.image("farGrounds", farGrounds)
 		this.load.multiatlas("ninja", "ninja_sprites.json", ".")
 	}
 
@@ -87,6 +94,46 @@ class PlayGame extends Phaser.Scene {
 		super("PlayGame")
 	}
 	create() {
+
+    console.log(this)
+    const initrinsicSkyHeight = this.textures.list.sky.source[0].height
+    this.add
+			.tileSprite(0, 0, game.config.width, initrinsicSkyHeight, "sky")
+			.setOrigin(0, 0)
+			.setScale(game.config.height / initrinsicSkyHeight)
+
+
+    const initrinsicSeaHeight = this.textures.list.sea.source[0].height
+    this.seaBg = this.add
+			.tileSprite(
+				0,
+				game.config.height,
+				game.config.width,
+				initrinsicSeaHeight,
+				"sea"
+			)
+			.setOrigin(0, 1)
+			.setScale((game.config.height * 0.25) / initrinsicSeaHeight)
+
+    const intrinsicCloudsHeight = this.textures.list.clouds.source[0].height
+    this.cloudBg = this.add
+			.tileSprite(
+				0,
+				game.config.height * 0.75,
+				game.config.width,
+				intrinsicCloudsHeight,
+				"clouds"
+			)
+			.setOrigin(0, 1)
+			.setScale((game.config.height * 0.5) / intrinsicCloudsHeight)
+
+    // we need to add this in a group and animate it
+    const intrinsicFarGroundsHeight = this.textures.list.farGrounds.source[0].height
+    this.farGroundsBg = this.add
+			.image(game.config.width / 2, game.config.height, "farGrounds")
+			.setOrigin(0, 1)
+			.setScale((game.config.height * 0.2) / intrinsicFarGroundsHeight)
+
 		// group with all active platforms.
 		this.platformGroup = this.add.group({
 			// once a platform is removed, it's added to the pool
@@ -180,6 +227,7 @@ class PlayGame extends Phaser.Scene {
 			this.playerJumps++
 		}
 	}
+
 	update() {
 		// game over
 		if (this.player.y > game.config.height) {
@@ -210,6 +258,11 @@ class PlayGame extends Phaser.Scene {
 				game.config.width + nextPlatformWidth / 2
 			)
 		}
+
+    // parallax
+    this.cloudBg.tilePositionX += 0.075
+    this.seaBg.tilePositionX += 0.15
+    this.farGroundsBg.x -= 0.5
 	}
 }
 function resize() {
