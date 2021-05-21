@@ -1,6 +1,6 @@
 import Phaser from "phaser"
 import { Preload } from './Preload'
-import { PlayGame } from "./PlayGame"
+import { PlayLevel } from "./PlayLevel"
 
 let game
 
@@ -15,7 +15,7 @@ window.onload = function () {
 		type: Phaser.AUTO,
 		width: window.innerWidth,
 		height: window.innerHeight,
-		scene: [Preload, PlayGame],
+		scene: [Preload, PlayLevel],
 		backgroundColor: 0x444444,
 
 		// physics settings

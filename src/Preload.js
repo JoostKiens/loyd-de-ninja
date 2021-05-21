@@ -3,7 +3,9 @@ import platform from "./assets/platform.png"
 import sky from "./assets/sky.png"
 import sea from "./assets/sea.png"
 import clouds from "./assets/clouds.png"
+import fruits from "./assets/fruits.png"
 import farGrounds from "./assets/far-grounds.png"
+import mainTileset from './assets/main_tileset.png'
 
 export class Preload extends Phaser.Scene {
 	constructor() {
@@ -15,9 +17,13 @@ export class Preload extends Phaser.Scene {
 		this.load.image("sky", sky)
 		this.load.image("sea", sea)
 		this.load.image("clouds", clouds)
+		this.load.image("fruits", fruits)
 		this.load.image("farGrounds", farGrounds)
+		this.load.image('mainTileset', mainTileset)
 		this.load.multiatlas("ninja", "ninja_sprites.json", ".")
     this.load.multiatlas("bg", "bg_sprites.json", ".")
+		// this.load.image("main_tileset", "img/tileset_sprite.png")
+		this.load.tilemapTiledJSON("level1", "main_map.json")
 	}
 
 	create() {

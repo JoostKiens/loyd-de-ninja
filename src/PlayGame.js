@@ -18,6 +18,8 @@ export class PlayGame extends Phaser.Scene {
 	}
 	create() {
 
+		var map = this.add.tilemap('level1')
+
 		this.addBackgroundTiles()
 		// we need to add this in a group and animate it
 		const intrinsicFarGroundsHeight =
