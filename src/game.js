@@ -5,19 +5,26 @@ import { PlayGame } from "./PlayGame"
 let game
 
 
+// How to properly scale stuff
+// - game.scale.resize
+// - add a resize listener to the game and set physics bounds
+
 window.onload = function () {
 	// object containing configuration options
 	let gameConfig = {
 		type: Phaser.AUTO,
-		width: 1334,
-		height: 750,
+		width: window.innerWidth,
+		height: window.innerHeight,
 		scene: [Preload, PlayGame],
 		backgroundColor: 0x444444,
 
 		// physics settings
 		physics: {
 			default: "arcade",
-			arcade: { debug: true },
+			arcade: {
+				overlapBias: 8,
+				debug: true
+			},
 		},
 	}
 	game = new Phaser.Game(gameConfig)
@@ -27,16 +34,5 @@ window.onload = function () {
 }
 
 function resize() {
-	let canvas = document.querySelector("canvas")
-	let windowWidth = window.innerWidth
-	let windowHeight = window.innerHeight
-	let windowRatio = windowWidth / windowHeight
-	let gameRatio = game.config.width / game.config.height
-	if (windowRatio < gameRatio) {
-		canvas.style.width = windowWidth + "px"
-		canvas.style.height = windowWidth / gameRatio + "px"
-	} else {
-		canvas.style.width = windowHeight * gameRatio + "px"
-		canvas.style.height = windowHeight + "px"
-	}
+  game.scale.resize(window.innerWidth, window.innerHeight)
 }

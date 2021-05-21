@@ -1,14 +1,15 @@
 import Phaser from 'phaser'
 
 // global game options
+// we need to make all these relative to height
 let gameOptions = {
 	platformStartSpeed: 350,
 	spawnRange: [100, 350],
-	platformSizeRange: [50, 250],
+	platformSizeRange: [50, 550],
 	playerGravity: 900,
 	jumpForce: 400,
 	playerStartPosition: 200,
-	jumps: 2,
+	jumps: 3,
 }
 
 export class PlayGame extends Phaser.Scene {
@@ -16,13 +17,17 @@ export class PlayGame extends Phaser.Scene {
 		super("PlayGame")
 	}
 	create() {
-    this.addBackgroundTiles()
+
+		this.addBackgroundTiles()
 		// we need to add this in a group and animate it
-		const intrinsicFarGroundsHeight = this.textures.list.farGrounds.source[0].height
+		const intrinsicFarGroundsHeight =
+			this.textures.list.farGrounds.source[0].height
+		const farGroundsScale =
+			(this.sys.canvas.height * 0.3) / intrinsicFarGroundsHeight
 		this.farGroundsBg = this.add
 			.image(this.sys.canvas.width / 2, this.sys.canvas.height, "farGrounds")
 			.setOrigin(0, 1)
-			.setScale((this.sys.canvas.height * 0.2) / intrinsicFarGroundsHeight)
+			.setScale(farGroundsScale)
 
 		// group with all active platforms.
 		this.platformGroup = this.add.group({
@@ -42,7 +47,10 @@ export class PlayGame extends Phaser.Scene {
 
 		// number of consecutive jumps made by the player
 		this.playerJumps = 0
-		this.isMoving = false
+
+    this.bgTextures = this.textures.get("bg")
+		// this.bgFrames = atlasTexture.getFrameNames()
+		// console.log(scene.textures)
 
 		// adding a platform to the game, the arguments are platform width and x position
 		this.addPlatform(this.sys.canvas.width, this.sys.canvas.width / 2)
@@ -59,51 +67,14 @@ export class PlayGame extends Phaser.Scene {
 	}
 
 	addPlayer({ posX, posY }) {
-		// adding the player;
-		this.player = this.physics.add.sprite(
-			posX,
-			posY,
-			"ninja",
-			"run/Run__000.png"
-		)
-		this.player.setScale(0.25)
+		const initrinsicNinjaHeight = 483
+		const scale = (this.sys.canvas.height * 0.15) / initrinsicNinjaHeight
+		this.player = this.physics.add
+			.sprite(posX, posY, "ninja", "run/Run__000.png")
+			.setScale(scale)
 		this.player.setGravityY(gameOptions.playerGravity)
 	}
 
-  addBackgroundTiles() {
-    const initrinsicSkyHeight = this.textures.list.sky.source[0].height
-		this.add
-			.tileSprite(0, 0, this.sys.canvas.width, initrinsicSkyHeight, "sky")
-			.setOrigin(0, 0)
-			.setScale(this.sys.canvas.height / initrinsicSkyHeight)
-
-		const initrinsicSeaHeight = this.textures.list.sea.source[0].height
-		this.seaBg = this.add
-			.tileSprite(
-				0,
-				this.sys.canvas.height,
-				this.sys.canvas.width,
-				initrinsicSeaHeight,
-				"sea"
-			)
-			.setOrigin(0, 1)
-			.setScale((this.sys.canvas.height * 0.25) / initrinsicSeaHeight)
-
-		const intrinsicCloudsHeight = this.textures.list.clouds.source[0].height
-		this.cloudBg = this.add
-			.tileSprite(
-				0,
-				this.sys.canvas.height * 0.75,
-				this.sys.canvas.width,
-				intrinsicCloudsHeight,
-				"clouds"
-			)
-			.setOrigin(0, 1)
-			.setScale((this.sys.canvas.height * 0.5) / intrinsicCloudsHeight)
-
-  }
-
-	// the core of the script: platform are added from the pool or created on the fly
 	addPlatform(platformWidth, posX) {
 		let platform
 		if (this.platformPool.getLength()) {
@@ -113,30 +84,96 @@ export class PlayGame extends Phaser.Scene {
 			platform.visible = true
 			this.platformPool.remove(platform)
 		} else {
-			platform = this.physics.add.sprite(
-				posX,
-				this.sys.canvas.height * 0.8,
-				"platform"
+			const container = this.add
+				.container(posX, this.sys.canvas.height * 0.8)
+				.setSize(platformWidth, 100)
+				//.setOrigin(0, 0)
+
+			// do this outside this function
+			const left = this.cache.game.textures
+				.get("bg")
+				.get("ground_large_left.png")
+			const top = this.cache.game.textures
+				.get("bg")
+				.get("ground_large_top_grass.png")
+			const right = this.cache.game.textures
+				.get("bg")
+				.get("ground_large_right.png")
+			//this.cache.getFrameData("sprites").getFrameByName("ground_large_left.png")
+			var image1 = this.add.sprite(
+				-platformWidth / 2,
+				0,
+				"bg",
+				"ground_large_left.png"
 			)
+			.setOrigin(0, 0.5)
+
+
+
+			var image2 = this.add
+				.tileSprite(
+					0,
+					0,
+					platformWidth - left.width - right.width,
+					top.height,
+					"bg",
+					"ground_large_top_grass.png"
+				)
+				.setOrigin(0, 0.5)
+			var image3 = this.add.image(
+				platformWidth - left.width - right.width,
+				0,
+				"bg",
+				"ground_large_right.png"
+			)
+
+			container.add([image1, image2])
+			this.physics.add.existing(container, 0)
+			platform = container.body
 			platform.setImmovable(true)
 			platform.setVelocityX(gameOptions.platformStartSpeed * -1)
-			this.platformGroup.add(platform)
+			this.platformGroup.add(container)
 		}
-		platform.displayWidth = platformWidth
+		// platform.displayWidth = platformWidth
+    // platform.displayHeight = this.sys.canvas.height * 0.2
 		this.nextPlatformDistance = Phaser.Math.Between(
 			gameOptions.spawnRange[0],
 			gameOptions.spawnRange[1]
 		)
 	}
 
+	// the core of the script: platform are added from the pool or created on the fly
+	// addPlatform(platformWidth, posX) {
+	// 	let platform
+	// 	if (this.platformPool.getLength()) {
+	// 		platform = this.platformPool.getFirst()
+	// 		platform.x = posX
+	// 		platform.active = true
+	// 		platform.visible = true
+	// 		this.platformPool.remove(platform)
+	// 	} else {
+	// 		platform = this.physics.add.sprite(
+	// 			posX,
+	// 			this.sys.canvas.height * 0.8,
+	// 			"platform"
+	// 		)
+	// 		platform.setImmovable(true)
+	// 		platform.setVelocityX(gameOptions.platformStartSpeed * -1)
+	// 		this.platformGroup.add(platform)
+	// 	}
+	// 	platform.displayWidth = platformWidth
+	// 	this.nextPlatformDistance = Phaser.Math.Between(
+	// 		gameOptions.spawnRange[0],
+	// 		gameOptions.spawnRange[1]
+	// 	)
+	// }
+
 	run() {
 		if (
 			this.player.anims?.currentAnim?.key !== "run" &&
 			!this.player.anims?.isPlaying
 		) {
-			console.log("run")
 			this.player.anims.play("run")
-			this.isMoving = true
 		}
 	}
 
@@ -153,6 +190,48 @@ export class PlayGame extends Phaser.Scene {
 			this.player.anims.play("jump")
 			this.playerJumps++
 		}
+	}
+
+	addBackgroundTiles() {
+    // this.textures.get('sky')
+		const initrinsicSkyHeight = this.textures.list.sky.source[0].height
+		const skyScale = (this.sys.canvas.height * 0.5) / initrinsicSkyHeight
+		this.add
+			.tileSprite(
+				0,
+				0,
+				this.sys.canvas.width / skyScale,
+				initrinsicSkyHeight,
+				"sky"
+			)
+			.setOrigin(0, 0)
+			.setScale(skyScale)
+
+		const initrinsicSeaHeight = this.textures.list.sea.source[0].height
+		const seaScale = (this.sys.canvas.height * 0.25) / initrinsicSeaHeight
+		this.seaBg = this.add
+			.tileSprite(
+				0,
+				this.sys.canvas.height,
+				this.sys.canvas.width / seaScale,
+				initrinsicSeaHeight,
+				"sea"
+			)
+			.setOrigin(0, 1)
+			.setScale(seaScale)
+
+		const initrinsicCloudHeight = this.textures.list.clouds.source[0].height
+		const cloudScale = (this.sys.canvas.height * 0.5) / initrinsicCloudHeight
+		this.cloudBg = this.add
+			.tileSprite(
+				0,
+				this.sys.canvas.height * 0.75,
+				this.sys.canvas.width / cloudScale,
+				initrinsicCloudHeight,
+				"clouds"
+			)
+			.setOrigin(0, 1)
+			.setScale(cloudScale)
 	}
 
 	update() {
@@ -176,6 +255,7 @@ export class PlayGame extends Phaser.Scene {
 
 		// adding new platforms
 		if (minDistance > this.nextPlatformDistance) {
+      // ideally we want to make this fit the
 			var nextPlatformWidth = Phaser.Math.Between(
 				gameOptions.platformSizeRange[0],
 				gameOptions.platformSizeRange[1]
@@ -189,6 +269,6 @@ export class PlayGame extends Phaser.Scene {
 		// parallax
 		this.cloudBg.tilePositionX += 0.075
 		this.seaBg.tilePositionX += 0.15
-		this.farGroundsBg.x -= 0.5
+		this.farGroundsBg.x -= 1
 	}
 }

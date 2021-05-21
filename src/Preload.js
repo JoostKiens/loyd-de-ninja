@@ -17,6 +17,7 @@ export class Preload extends Phaser.Scene {
 		this.load.image("clouds", clouds)
 		this.load.image("farGrounds", farGrounds)
 		this.load.multiatlas("ninja", "ninja_sprites.json", ".")
+    this.load.multiatlas("bg", "bg_sprites.json", ".")
 	}
 
 	create() {
@@ -49,7 +50,6 @@ export class Preload extends Phaser.Scene {
 			repeat: 0,
 		})
 
-		console.log("done")
 		this.scene.start("PlayGame")
 	}
 }
