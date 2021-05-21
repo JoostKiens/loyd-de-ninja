@@ -7,7 +7,7 @@ let gameOptions = {
 	spawnRange: [100, 350],
 	platformSizeRange: [50, 550],
 	playerGravity: 900,
-	jumpForce: 400,
+	jumpForce: 9,
 	playerStartPosition: 200,
 	jumps: 3,
 }
@@ -17,18 +17,11 @@ export class PlayLevel extends Phaser.Scene {
 		super("PlayGame")
 	}
 	create() {
-    //this.addBackgroundTiles()
-
-		this.map = this.add.tilemap("level1")
-    this.map.addTilesetImage("main_tiles", "mainTileset")
-    this.map.addTilesetImage("fruits", "fruits")
-
-    var map = this.make.tilemap({ key: "level1" })
+		var map = this.make.tilemap({ key: "level1" })
 		var tileset = map.addTilesetImage("main_tiles", "mainTileset")
-		var layer = map.createLayer("platform", tileset, 0, 300)
-    console.log(layer)
-    layer.setCollisionFromCollisionGroup()
-
+		var platform = map.createLayer("platform", tileset, 0, 300, )
+		map.setCollisionFromCollisionGroup(true, true, platform)
+		this.isRunning = false
 
 		this.playerJumps = 0
 		this.addPlayer({
@@ -36,42 +29,61 @@ export class PlayLevel extends Phaser.Scene {
 			posY: this.sys.canvas.height / 2,
 		})
 
-    this.matter.world.convertTilemapLayer(layer)
+		this.player.setOnCollide((e) => {
+      if (this.isRunning || e.collision.depth < 0.3) return
+      console.log(e)
+			// we needd to detect the proper object (platforms)
+      this.isRunning = true
+			this.run()
+		})
+
+		this.player.setOnCollideEnd((e) => {
+			// this.stopRunning()
+      if (!this.isRunning || e.collision.depth < 0.3) return
+      console.log('stop', e)
+      this.isRunning = false
+		})
+
+		this.matter.world.convertTilemapLayer(platform)
+    console.log(map)
 		this.matter.world.setBounds(map.widthInPixels, map.heightInPixels)
 
-		// setting collisions between the player and the platform group
-    // this.physics.add.collider(this.player, layer, () => this.run())
+    var camera = this.cameras.main
+    camera.startFollow(this.player)
 
-		// checking for input
 		this.input.on("pointerdown", this.jump, this)
-    //this.platformLayer.resizeWorld()
 	}
 
 	addPlayer({ posX, posY }) {
 		const initrinsicNinjaHeight = 483
 		const scale = (this.sys.canvas.height * 0.15) / initrinsicNinjaHeight
 		this.player = this.matter.add
-			.sprite(posX, posY, "ninja", "run/Run__000.png")
+			.sprite(posX, posY, "ninja", "run/Run__000.png", {
+        label: 'player'
+				// restitution: 0,
+				// chamfer: 10,
+			})
 			.setScale(scale)
-		this.player.setGravityY(gameOptions.playerGravity)
+			.setFixedRotation()
 	}
 
 	run() {
-		if (
-			this.player.anims?.currentAnim?.key !== "run" &&
-			!this.player.anims?.isPlaying
-		) {
-			this.player.anims.play("run")
-		}
+		this.player.anims.play("idle")
+	}
+
+	run() {
+		this.player.anims.play("run")
+		this.isRunning = true
 	}
 
 	// the player jumps when on the ground, or once in the air as long as there are jumps left and the first jump was on the ground
 	jump() {
+		console.log(this.player)
 		if (
-			this.player.body.touching.down ||
+			this.isRunning ||
 			(this.playerJumps > 0 && this.playerJumps < gameOptions.jumps)
 		) {
-			if (this.player.body.touching.down) {
+			if (this.isRunning) {
 				this.playerJumps = 0
 			}
 			this.player.setVelocityY(gameOptions.jumpForce * -1)
@@ -80,53 +92,12 @@ export class PlayLevel extends Phaser.Scene {
 		}
 	}
 
-	addBackgroundTiles() {
-		// this.textures.get('sky')
-		const initrinsicSkyHeight = this.textures.list.sky.source[0].height
-		const skyScale = (this.sys.canvas.height * 0.5) / initrinsicSkyHeight
-		this.add
-			.tileSprite(
-				0,
-				0,
-				this.sys.canvas.width / skyScale,
-				initrinsicSkyHeight,
-				"sky"
-			)
-			.setOrigin(0, 0)
-			.setScale(skyScale)
-
-		const initrinsicSeaHeight = this.textures.list.sea.source[0].height
-		const seaScale = (this.sys.canvas.height * 0.25) / initrinsicSeaHeight
-		this.seaBg = this.add
-			.tileSprite(
-				0,
-				this.sys.canvas.height,
-				this.sys.canvas.width / seaScale,
-				initrinsicSeaHeight,
-				"sea"
-			)
-			.setOrigin(0, 1)
-			.setScale(seaScale)
-
-		const initrinsicCloudHeight = this.textures.list.clouds.source[0].height
-		const cloudScale = (this.sys.canvas.height * 0.5) / initrinsicCloudHeight
-		this.cloudBg = this.add
-			.tileSprite(
-				0,
-				this.sys.canvas.height * 0.75,
-				this.sys.canvas.width / cloudScale,
-				initrinsicCloudHeight,
-				"clouds"
-			)
-			.setOrigin(0, 1)
-			.setScale(cloudScale)
-	}
-
 	update() {
 		// game over
 		if (this.player.y > this.sys.canvas.height) {
 			this.scene.start("PlayGame")
 		}
-		this.player.x = gameOptions.playerStartPosition
+
+		this.player.x += 3
 	}
 }
