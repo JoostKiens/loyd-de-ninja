@@ -27,7 +27,7 @@ export class PlayLevel extends Phaser.Scene {
 		var tileset = map.addTilesetImage("main_tiles", "mainTileset")
 		var layer = map.createLayer("platform", tileset, 0, 300)
     console.log(layer)
-    map.setCollisionFromCollisionGroup(true, true, layer)
+    layer.setCollisionFromCollisionGroup()
 
 
 		this.playerJumps = 0
@@ -36,8 +36,11 @@ export class PlayLevel extends Phaser.Scene {
 			posY: this.sys.canvas.height / 2,
 		})
 
+    this.matter.world.convertTilemapLayer(layer)
+		this.matter.world.setBounds(map.widthInPixels, map.heightInPixels)
+
 		// setting collisions between the player and the platform group
-    this.physics.add.collider(this.player, layer, () => this.run())
+    // this.physics.add.collider(this.player, layer, () => this.run())
 
 		// checking for input
 		this.input.on("pointerdown", this.jump, this)
@@ -47,7 +50,7 @@ export class PlayLevel extends Phaser.Scene {
 	addPlayer({ posX, posY }) {
 		const initrinsicNinjaHeight = 483
 		const scale = (this.sys.canvas.height * 0.15) / initrinsicNinjaHeight
-		this.player = this.physics.add
+		this.player = this.matter.add
 			.sprite(posX, posY, "ninja", "run/Run__000.png")
 			.setScale(scale)
 		this.player.setGravityY(gameOptions.playerGravity)

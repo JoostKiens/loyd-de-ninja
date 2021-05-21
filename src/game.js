@@ -20,11 +20,17 @@ window.onload = function () {
 
 		// physics settings
 		physics: {
-			default: "arcade",
-			arcade: {
-				overlapBias: 8,
-				debug: true
+			default: "matter",
+			matter: {
+				gravity: { y: 1 },
+				enableSleep: true,
+				debug: true,
 			},
+			// default: "arcade",
+			// arcade: {
+			// 	overlapBias: 8,
+			// 	debug: true
+			// },
 		},
 	}
 	game = new Phaser.Game(gameConfig)
