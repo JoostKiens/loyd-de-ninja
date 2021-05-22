@@ -21,6 +21,7 @@ export class Preload extends Phaser.Scene {
 		this.load.multiatlas("ninja", "ninja_sprites.json", ".")
     this.load.multiatlas("bg", "bg_sprites.json", ".")
 		this.load.tilemapTiledJSON("level1", "main_map.json")
+		this.load.tilemapTiledJSON("level2", "level_2.json")
 	}
 
 	create() {

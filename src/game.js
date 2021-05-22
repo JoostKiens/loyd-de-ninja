@@ -17,20 +17,13 @@ window.onload = function () {
 		height: window.innerHeight,
 		scene: [Preload, PlayLevel],
 		backgroundColor: 0x444444,
-
-		// physics settings
 		physics: {
 			default: "matter",
 			matter: {
 				gravity: { y: 1 },
 				enableSleep: true,
-				debug: true,
-			},
-			// default: "arcade",
-			// arcade: {
-			// 	overlapBias: 8,
-			// 	debug: true
-			// },
+				debug: false,
+			}
 		},
 	}
 	game = new Phaser.Game(gameConfig)
