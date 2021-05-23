@@ -1,15 +1,8 @@
 import Phaser from "phaser"
 
-// global game options
-// we need to make all these relative to height
 let gameOptions = {
-	platformStartSpeed: 350,
-	spawnRange: [100, 350],
-	platformSizeRange: [50, 550],
-	playerGravity: 900,
 	jumpForce: 9,
-	playerStartPosition: 200,
-	jumps: 3,
+	jumps: 2,
 }
 
 // @TODO
@@ -17,68 +10,81 @@ let gameOptions = {
 // V. properly detect onCollide and setOnCollideEnd
   // detect is on platform
   // set platform to isStatic
-// 2. load other layers
+// V. load other layers
 // V. properly scale
-// 4. create a dead zone
+// V. fix size of world
+// V. create a dead zone
 // 5. implement parallax
-// 6. add Noa's artwork to tilemap
-// 7. Fix flicker
-// 8. Fix grid
+// V. add Noa's artwork to tilemap
+// V. Fix flicker
+// V. Fix grid
 
 export class PlayLevel extends Phaser.Scene {
 	constructor() {
 		super("PlayGame")
     this.playerJumps = 0
     this.isRunning = false
+    this.hasStarted = false
 	}
 	create() {
     var map = this.make.tilemap({ key: "level2" })
-    const scaleFactor = this.sys.canvas.height / map.heightInPixels
+    const width = map.widthInPixels
+
     this.add
 			.image(0, 0, "sky")
 			.setOrigin(0, 0)
-			.setDisplaySize(map.widthInPixels, this.sys.canvas.height)
+			.setDisplaySize(width, this.sys.canvas.height)
 		const tileset = map.addTilesetImage("bg_tileset", "mainTileset")
     const sea = map.addTilesetImage("sea", "sea")
     const clouds = map.addTilesetImage("clouds", "clouds")
-    map.createLayer("clouds", clouds, 0, 0).setScale(scaleFactor, scaleFactor)
-    map.createLayer("sea", sea, 0, 0).setScale(scaleFactor, scaleFactor)
-    map.createLayer("trees", tileset, 0, 0).setScale(scaleFactor, scaleFactor)
-    map
-			.createLayer("rocky_bg", tileset, 0, 0)
-			.setScale(scaleFactor, scaleFactor)
-		const platform = map
-			.createLayer("platform", tileset, 0, 0)
-			.setScale(scaleFactor, scaleFactor)
+    const noaArtwork = map.addTilesetImage("noaArtwork", "noaArtwork")
+    const farGrounds = map.addTilesetImage("farGrounds", "farGrounds")
+    map.createLayer("clouds", clouds, 0, 0)
+    map.createLayer("sea", sea, 0, 0)
+    map.createLayer("noaLayer2", noaArtwork, 0, 0)
+    map.createLayer("noaLayer1", noaArtwork, 0, 0)
+    map.createLayer("trees", tileset, 0, 0)
+    map.createLayer("farGrounds", farGrounds, 0, 0)
+    map.createLayer("rocky_bg", tileset, 0, 0)
+		const platform = map.createLayer("platform", tileset, 0, 0)
 
 		platform.setCollisionFromCollisionGroup()
 		this.matter.world.convertTilemapLayer(platform)
-    this.matter.world.setBounds(map.widthInPixels, map.heightInPixels)
+    this.matter.world.setBounds(map.widthInPixels, this.sys.canvas.height)
 
-		//playerJumps = 0
 		this.addPlayer({
-			posX: gameOptions.playerStartPosition,
+			posX: this.sys.canvas.width / 7,
 			posY: this.sys.canvas.height / 2,
 		})
 
 		this.player.setOnCollide(() => {
-      if (!this.isRunning) this.run()
+      // we need to filter platform
+      if (!this.isRunning) {
+        this.run()
+        this.hasStarted = true
+      }
 		})
 
-    var camera = this.cameras.main
-    camera.startFollow(this.player)
-    camera.setLerp(1, 0)
-    camera.setBounds(0, 0, map.widthInPixels, this.sys.canvas.height)
+    const camera = this.cameras.main
+    camera.setBounds(0, 0, width, this.sys.canvas.height)
+    camera.startFollow(
+			this.player,
+			true,
+			0.05,
+			1,
+			-this.sys.canvas.width / 4,
+			0
+		)
 		this.input.on("pointerdown", this.jump, this)
 	}
 
 	addPlayer({ posX, posY }) {
 		const initrinsicNinjaHeight = 483
-		const scale = (this.sys.canvas.height * 0.15) / initrinsicNinjaHeight
+		const scale = (this.sys.canvas.height * 0.1) / initrinsicNinjaHeight
 		this.player = this.matter.add
 			.sprite(posX, posY, "ninja", "run/Run__000.png", {
         label: 'player',
-        chamfer: { radius: 80 },
+        chamfer: { radius: [160, 80, 160, 80] },
 				restitution: 0.25,
 			})
 			.setScale(scale)
@@ -107,11 +113,11 @@ export class PlayLevel extends Phaser.Scene {
 	}
 
 	update() {
-		// game over, need to improve ths
 		if (this.player.y > this.sys.canvas.height) {
+      this.isRunning = false
 			this.scene.start("PlayGame")
-		}
-
-		this.player.x += 5
+		} else {
+      if (this.hasStarted) this.player.x += 3
+    }
 	}
 }

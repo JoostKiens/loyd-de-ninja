@@ -3,18 +3,11 @@ import { Preload } from './Preload'
 import { PlayLevel } from "./PlayLevel"
 
 let game
-
-
-// How to properly scale stuff
-// - game.scale.resize
-// - add a resize listener to the game and set physics bounds
-
 window.onload = function () {
-	// object containing configuration options
 	let gameConfig = {
 		type: Phaser.AUTO,
 		width: window.innerWidth,
-		height: window.innerHeight,
+		height: 480,
 		scene: [Preload, PlayLevel],
 		backgroundColor: 0x444444,
 		physics: {
@@ -22,7 +15,7 @@ window.onload = function () {
 			matter: {
 				gravity: { y: 1 },
 				enableSleep: true,
-				debug: false,
+				debug: true,
 			}
 		},
 	}
@@ -33,5 +26,6 @@ window.onload = function () {
 }
 
 function resize() {
-  game.scale.resize(window.innerWidth, window.innerHeight)
+	const ratio = window.innerWidth / window.innerHeight
+  game.scale.resize(Math.round(ratio * 480), 480)
 }
