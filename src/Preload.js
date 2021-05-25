@@ -5,7 +5,7 @@ import clouds from "./assets/clouds.png"
 // import fruits from "./assets/fruits.png"
 import farGrounds from "./assets/farGrounds.png"
 import noaArtwork from "./assets/noaArtwork.png"
-import mainTileset from './assets/main_tileset.png'
+import mainTileset from './assets/main_tileset.extruded.png'
 
 export class Preload extends Phaser.Scene {
 	constructor() {
@@ -128,7 +128,6 @@ export class Preload extends Phaser.Scene {
 
 		this.load.on("progress", (value) => {
 			percentText.setText(parseInt(value * 100) + "%")
-			console.log(value)
 			progressBar.clear()
 			progressBar.fillStyle(0xffffff, 1)
 			progressBar.fillRect(
@@ -137,10 +136,6 @@ export class Preload extends Phaser.Scene {
 				(progressBoxWidth - progressBarMargin * 2) * value,
 				progressBoxHeight - progressBarMargin * 2
 			)
-		})
-
-		this.load.on("fileprogress", function (file) {
-			console.log(file.src)
 		})
 
 		this.load.on("complete", () => {

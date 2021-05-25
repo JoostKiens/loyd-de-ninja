@@ -29,12 +29,11 @@ export class PlayLevel extends Phaser.Scene {
 	create() {
     var map = this.make.tilemap({ key: "level2" })
     const width = map.widthInPixels
-
     this.add
 			.image(0, 0, "sky")
 			.setOrigin(0, 0)
 			.setDisplaySize(width, this.sys.canvas.height)
-		const tileset = map.addTilesetImage("bg_tileset", "mainTileset")
+		const tileset = map.addTilesetImage("bg_tileset", "mainTileset", 16, 16, 1, 2)
     const sea = map.addTilesetImage("sea", "sea")
     const clouds = map.addTilesetImage("clouds", "clouds")
     const noaArtwork = map.addTilesetImage("noaArtwork", "noaArtwork")
@@ -46,6 +45,7 @@ export class PlayLevel extends Phaser.Scene {
     map.createLayer("trees", tileset, 0, 0)
     map.createLayer("farGrounds", farGrounds, 0, 0)
     map.createLayer("rocky_bg", tileset, 0, 0)
+
 		const platform = map.createLayer("platform", tileset, 0, 0)
 
 		platform.setCollisionFromCollisionGroup()
@@ -59,8 +59,8 @@ export class PlayLevel extends Phaser.Scene {
 		})
 
 		this.addPlayer({
-			posX: this.sys.canvas.width / 7,
-			posY: this.sys.canvas.height / 2,
+			posX: 100,
+			posY: 100,
 		})
 
 		this.player.setOnCollide(() => {
@@ -72,10 +72,13 @@ export class PlayLevel extends Phaser.Scene {
 		})
 
     const camera = this.cameras.main
-    camera.setBounds(0, 0, width, this.sys.canvas.height)
+    camera.height = this.sys.canvas.height
+    camera.roundPixels = true
+    camera.zoom = this.sys.canvas.height / 480
+    camera.setBounds(0, 0, width, 480)
     camera.startFollow(
 			this.player,
-			true,
+			false,
 			0.05,
 			1,
 			-this.sys.canvas.width / 4,

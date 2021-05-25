@@ -7,7 +7,7 @@ window.onload = function () {
 	let gameConfig = {
 		type: Phaser.AUTO,
 		width: window.innerWidth,
-		height: 480,
+		height: window.innerHeight,
 		scene: [Preload, PlayLevel],
 		transparent: true,
 		physics: {
@@ -16,7 +16,7 @@ window.onload = function () {
 				gravity: { y: 1 },
 				enableSleep: true,
 				debug: false,
-			}
+			},
 		},
 	}
 	game = new Phaser.Game(gameConfig)
@@ -27,5 +27,5 @@ window.onload = function () {
 
 function resize() {
 	const ratio = window.innerWidth / window.innerHeight
-  game.scale.resize(Math.round(ratio * 480), 480)
+  game.scale.resize(Math.round(ratio * window.innerHeight), window.innerHeight)
 }
