@@ -5,14 +5,12 @@ let gameOptions = {
 	jumps: 2,
 }
 const gameHeight = 480
-// TODO find a solution for the repeatable backgrounds
+
 export class PlayLevel extends Phaser.Scene {
 	constructor() {
 		super("PlayGame")
 	}
 	create() {
-		const viewportWidthBeforeZoom =
-			(gameHeight / this.sys.canvas.height) * this.sys.canvas.width
     this.playerJumps = 0
 		this.isRunning = false
 		this.hasStarted = false
@@ -26,7 +24,6 @@ export class PlayLevel extends Phaser.Scene {
     const noaArtwork = map.addTilesetImage("noaArtwork", "noaArtwork")
     const farGrounds = map.addTilesetImage("farGrounds", "farGrounds")
 
-		const scale = this.sys.canvas.height / gameHeight
 		const container = this.add.container(0, 0)
 		const bg = this.add
 			.tileSprite(
@@ -38,7 +35,6 @@ export class PlayLevel extends Phaser.Scene {
 				"bg.png"
 			)
 			.setOrigin(0, 0)
-			//.setScrollFactor(0)
 		const sky = this.add
 			.tileSprite(
 				0,
