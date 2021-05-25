@@ -4,31 +4,70 @@ let gameOptions = {
 	jumpForce: 9,
 	jumps: 2,
 }
-
+const gameHeight = 480
+// TODO find a solution for the repeatable backgrounds
 export class PlayLevel extends Phaser.Scene {
 	constructor() {
 		super("PlayGame")
-
 	}
 	create() {
+		const viewportWidthBeforeZoom =
+			(gameHeight / this.sys.canvas.height) * this.sys.canvas.width
     this.playerJumps = 0
 		this.isRunning = false
 		this.hasStarted = false
+		this.cameraPrevX = 0
+		this.cameraVelocityX = 0
     this.speed = 0
 
     const map = this.make.tilemap({ key: "level2" })
     const width = map.widthInPixels
-    this.add
-			.image(0, 0, "sky")
-			.setOrigin(0, 0)
-			.setDisplaySize(width, this.sys.canvas.height)
 		const tileset = map.addTilesetImage("bg_tileset", "mainTileset", 16, 16, 1, 2)
-    const sea = map.addTilesetImage("sea", "sea")
-    const clouds = map.addTilesetImage("clouds", "clouds")
     const noaArtwork = map.addTilesetImage("noaArtwork", "noaArtwork")
     const farGrounds = map.addTilesetImage("farGrounds", "farGrounds")
-    map.createLayer("clouds", clouds, 0, 0)
-    map.createLayer("sea", sea, 0, 0)
+
+		const scale = this.sys.canvas.height / gameHeight
+		const container = this.add.container(0, 0)
+		const bg = this.add
+			.tileSprite(
+				0,
+				0,
+				this.sys.canvas.width,
+				this.sys.canvas.height,
+				"sprites",
+				"bg.png"
+			)
+			.setOrigin(0, 0)
+			//.setScrollFactor(0)
+		const sky = this.add
+			.tileSprite(
+				0,
+				480 - 92 - 304,
+				this.sys.canvas.width,
+				304,
+				"sprites",
+				"sky.png"
+			)
+			.setOrigin(0, 0)
+		this.clouds = this.add
+			.tileSprite(
+				0,
+				480 - 92 - 240,
+				this.sys.canvas.width,
+				240,
+				"sprites",
+				"clouds.png"
+			)
+			.setOrigin(0, 0)
+		this.sea = this.add
+			.tileSprite(0, 480 - 96, this.sys.canvas.width, 96, "sprites", "sea.png")
+			.setOrigin(0, 0)
+
+		container
+			.add([bg, sky, this.clouds, this.sea])
+			.setScrollFactor(0, 1)
+
+
     map.createLayer("noaLayer2", noaArtwork, 0, 0)
     map.createLayer("noaLayer1", noaArtwork, 0, 0)
     map.createLayer("trees", tileset, 0, 0)
@@ -39,7 +78,7 @@ export class PlayLevel extends Phaser.Scene {
 
 		platform.setCollisionFromCollisionGroup()
 		this.matter.world.convertTilemapLayer(platform)
-    this.matter.world.setBounds(map.widthInPixels, this.sys.canvas.height)
+    this.matter.world.setBounds(map.widthInPixels, 480)
 
     const powerUps = map.objects.find((x) => x.name === "powerUps")
 		powerUps.objects.forEach(({ x, y }) => {
@@ -62,7 +101,7 @@ export class PlayLevel extends Phaser.Scene {
 		})
 
     const camera = this.cameras.main
-    camera.setBounds(0, 0, width, 480)
+    camera.setBounds(0, 0, width, gameHeight)
     camera.height = this.sys.canvas.height
     camera.roundPixels = true
     camera.zoom = this.sys.canvas.height / 480
@@ -81,7 +120,7 @@ export class PlayLevel extends Phaser.Scene {
 		const initrinsicNinjaHeight = 483
 		const scale = (this.sys.canvas.height * 0.1) / initrinsicNinjaHeight
 		this.player = this.matter.add
-			.sprite(posX, posY, "ninja", "run/Run__000.png", {
+			.sprite(posX, posY, "sprites", "run/Run__000.png", {
         label: 'player',
         chamfer: { radius: [160, 80, 160, 80] },
 				restitution: 0.25,
@@ -130,16 +169,22 @@ export class PlayLevel extends Phaser.Scene {
       this.isRunning = false
 			this.player.setVelocityY(gameOptions.jumpForce * -1)
 			this.player.anims.play("jump")
+      //this.player.anims.play("jumpThrow")
 			this.playerJumps++
 		}
 	}
 
 	update(x) {
+		this.cameraVelocityX = this.cameras.main.scrollX - this.cameraPrevX
 		if (this.player.y > this.sys.canvas.height) {
       this.isRunning = false
 			this.scene.start("PlayGame")
 		} else {
       this.player.x += this.speed
+			this.clouds.tilePositionX += 0.15 * this.cameraVelocityX
+			this.sea.tilePositionX += 0.25 * this.cameraVelocityX
     }
+
+		this.cameraPrevX = this.cameras.main.scrollX
 	}
 }

@@ -34,10 +34,10 @@ export class Preload extends Phaser.Scene {
 		this.load.image("farGrounds", farGrounds)
 		this.load.image('mainTileset', mainTileset)
 		this.load.image("noaArtwork", noaArtwork)
-		this.load.multiatlas("ninja", "ninja_sprites.json", ".")
+		this.load.multiatlas("sprites", "sprites.json", ".")
 		this.load.multiatlas("fireball", "fireball.json", ".")
 		this.load.multiatlas("explosion1", "explosion1.json", ".")
-		this.load.tilemapTiledJSON("level2", "level_2.json")
+		this.load.tilemapTiledJSON("level2", "level_3.json")
 	}
 
 	create() {
@@ -75,7 +75,7 @@ export class Preload extends Phaser.Scene {
 			repeat: -1,
 		})
 
-		const runframes = this.anims.generateFrameNames("ninja", {
+		const runframes = this.anims.generateFrameNames("sprites", {
 			start: 0,
 			end: 9,
 			zeroPad: 3,
@@ -89,7 +89,7 @@ export class Preload extends Phaser.Scene {
 			repeat: -1,
 		})
 
-		const jumpFrames = this.anims.generateFrameNames("ninja", {
+		const jumpFrames = this.anims.generateFrameNames("sprites", {
 			start: 0,
 			end: 9,
 			zeroPad: 3,
@@ -100,6 +100,21 @@ export class Preload extends Phaser.Scene {
 		this.anims.create({
 			key: "jump",
 			frames: jumpFrames,
+			frameRate: 10,
+			repeat: 0,
+		})
+
+		const jumpThrowFrames = this.anims.generateFrameNames("sprites", {
+			start: 0,
+			end: 9,
+			zeroPad: 3,
+			prefix: "jumpThrow/Jump_Throw__",
+			suffix: ".png",
+		})
+
+		this.anims.create({
+			key: "jumpThrow",
+			frames: jumpThrowFrames,
 			frameRate: 10,
 			repeat: 0,
 		})
