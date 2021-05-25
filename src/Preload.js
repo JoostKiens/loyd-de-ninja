@@ -5,6 +5,7 @@ import clouds from "./assets/clouds.png"
 import farGrounds from "./assets/farGrounds.png"
 import noaArtwork from "./assets/noaArtwork.png"
 import mainTileset from './assets/main_tileset.extruded.png'
+import logo from "./assets/logo.png"
 
 export class Preload extends Phaser.Scene {
 	constructor() {
@@ -22,9 +23,10 @@ export class Preload extends Phaser.Scene {
 			width / 2.5,
 			height / 3
 		)
+
 		this.loadingUI()
 
-
+		this.load.image("logo", logo)
 		this.load.image("sky", sky)
 		this.load.image("sea", sea)
 		this.load.image("clouds", clouds)
@@ -38,6 +40,12 @@ export class Preload extends Phaser.Scene {
 	}
 
 	create() {
+		const { width, height } = this.textures.get("logo").getSourceImage()
+		const logo = this.add
+			.image(this.cameras.main.width / 2, this.cameras.main.width / 5, "logo")
+		logo.displayWidth = this.cameras.main.width / 2
+		logo.displayHeight = (logo.displayWidth / width) * height
+
 		const explosion1 = this.anims.generateFrameNames("explosion1", {
 			start: 0,
 			end: 70,
@@ -170,7 +178,9 @@ export class Preload extends Phaser.Scene {
 		})
 		startText.setOrigin(0.5, 0.5)
 		startText
-			.setInteractive()
+			.setInteractive({
+    		useHandCursor: true
+			})
 			.on("pointerdown", () => {
 				startText.destroy()
 				this.scene.start("PlayGame")

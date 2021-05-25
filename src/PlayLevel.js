@@ -67,7 +67,7 @@ export class PlayLevel extends Phaser.Scene {
 			false,
 			0.05,
 			1,
-			-this.sys.canvas.width / 4,
+			-this.sys.canvas.width / 8,
 			0
 		)
 		this.input.on("pointerdown", this.jump, this)

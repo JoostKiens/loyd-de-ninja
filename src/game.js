@@ -10,6 +10,7 @@ window.onload = function () {
 		height: window.innerHeight,
 		scene: [Preload, PlayLevel],
 		transparent: true,
+		autoFocus: true,
 		physics: {
 			default: "matter",
 			matter: {
@@ -20,12 +21,13 @@ window.onload = function () {
 		},
 	}
 	game = new Phaser.Game(gameConfig)
-	window.focus()
 	resize()
 	window.addEventListener("resize", resize, false)
 }
 
 function resize() {
-	const ratio = window.innerWidth / window.innerHeight
-  game.scale.resize(Math.round(ratio * window.innerHeight), window.innerHeight)
+	game.scale.resize(
+		Math.round((window.innerWidth / window.innerHeight) * window.innerHeight),
+		window.innerHeight
+	)
 }
