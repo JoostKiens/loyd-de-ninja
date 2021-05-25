@@ -8,12 +8,15 @@ let gameOptions = {
 export class PlayLevel extends Phaser.Scene {
 	constructor() {
 		super("PlayGame")
-    this.playerJumps = 0
-    this.isRunning = false
-    this.hasStarted = false
+
 	}
 	create() {
-    var map = this.make.tilemap({ key: "level2" })
+    this.playerJumps = 0
+		this.isRunning = false
+		this.hasStarted = false
+    this.speed = 0
+
+    const map = this.make.tilemap({ key: "level2" })
     const width = map.widthInPixels
     this.add
 			.image(0, 0, "sky")
@@ -53,15 +56,16 @@ export class PlayLevel extends Phaser.Scene {
       // we need to filter platform
       if (!this.isRunning) {
         this.run()
+        if (!this.hasStarted) this.speed = 3
         this.hasStarted = true
       }
 		})
 
     const camera = this.cameras.main
+    camera.setBounds(0, 0, width, 480)
     camera.height = this.sys.canvas.height
     camera.roundPixels = true
     camera.zoom = this.sys.canvas.height / 480
-    camera.setBounds(0, 0, width, 480)
     camera.startFollow(
 			this.player,
 			false,
@@ -99,6 +103,8 @@ export class PlayLevel extends Phaser.Scene {
             this.add
 							.sprite(posX, posY, "explosion1", "frame_0000.png")
 							.anims.play("explode")
+              this.speed = 8
+              this.time.delayedCall(3000, () => { this.speed = 3} )
           }
         }
 			})
@@ -133,7 +139,7 @@ export class PlayLevel extends Phaser.Scene {
       this.isRunning = false
 			this.scene.start("PlayGame")
 		} else {
-      if (this.hasStarted) this.player.x += 3
+      this.player.x += this.speed
     }
 	}
 }

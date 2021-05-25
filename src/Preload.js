@@ -12,6 +12,7 @@ export class Preload extends Phaser.Scene {
 		super("Preload")
 	}
 
+	// TODO: destroy everything
 	preload() {
 		const width = this.cameras.main.width
 		const height = this.cameras.main.height
