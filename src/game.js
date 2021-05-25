@@ -15,7 +15,7 @@ window.onload = function () {
 			matter: {
 				gravity: { y: 1 },
 				enableSleep: true,
-				debug: true,
+				debug: false,
 			}
 		},
 	}

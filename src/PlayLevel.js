@@ -52,6 +52,12 @@ export class PlayLevel extends Phaser.Scene {
 		this.matter.world.convertTilemapLayer(platform)
     this.matter.world.setBounds(map.widthInPixels, this.sys.canvas.height)
 
+    const powerUps = map.objects.find((x) => x.name === "powerUps")
+		powerUps.objects.forEach(({ x, y }) => {
+			this.addPowerUp({ posX: x, posY: y })
+			console.log(x)
+		})
+
 		this.addPlayer({
 			posX: this.sys.canvas.width / 7,
 			posY: this.sys.canvas.height / 2,
@@ -91,6 +97,27 @@ export class PlayLevel extends Phaser.Scene {
 			.setFixedRotation()
 	}
 
+  addPowerUp({ posX, posY }) {
+    const powerUp = this.matter.add
+			.sprite(posX, posY, "fireball", "fireball_001.png", {
+				label: "powerUp",
+				isStatic: true,
+				isSensor: true,
+				circleRadius: 50,
+				onCollideCallback: ({ bodyB }) => {
+          if (bodyB.label === "player") {
+            powerUp.visible = false
+            this.add
+							.sprite(posX, posY, "explosion1", "frame_0000.png")
+							.anims.play("explode")
+          }
+        }
+			})
+			.setScale(0.5)
+			.anims.play("play")
+      console.log("powerUp", powerUp)
+  }
+
 	run() {
 		this.player.anims.play("run")
 		this.isRunning = true
@@ -112,7 +139,7 @@ export class PlayLevel extends Phaser.Scene {
 		}
 	}
 
-	update() {
+	update(x) {
 		if (this.player.y > this.sys.canvas.height) {
       this.isRunning = false
 			this.scene.start("PlayGame")

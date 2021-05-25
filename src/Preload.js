@@ -21,12 +21,40 @@ export class Preload extends Phaser.Scene {
 		this.load.image('mainTileset', mainTileset)
 		this.load.image("noaArtwork", noaArtwork)
 		this.load.multiatlas("ninja", "ninja_sprites.json", ".")
-    this.load.multiatlas("bg", "bg_sprites.json", ".")
-		this.load.tilemapTiledJSON("level1", "main_map.json")
+		this.load.multiatlas("fireball", "fireball.json", ".")
+		this.load.multiatlas("explosion1", "explosion1.json", ".")
 		this.load.tilemapTiledJSON("level2", "level_2.json")
 	}
 
 	create() {
+		const explosion1 = this.anims.generateFrameNames("explosion1", {
+			start: 0,
+			end: 70,
+			zeroPad: 4,
+			prefix: "frame",
+			suffix: ".png",
+		})
+		this.anims.create({
+			key: "explode",
+			frames: explosion1,
+			frameRate: 60,
+			repeat: 0,
+		})
+
+		const fireballFrames = this.anims.generateFrameNames("fireball", {
+			start: 1,
+			end: 8,
+			zeroPad: 3,
+			prefix: "fireball_",
+			suffix: ".png",
+		})
+		this.anims.create({
+			key: "play",
+			frames: fireballFrames,
+			frameRate: 24,
+			repeat: -1,
+		})
+
 		const runframes = this.anims.generateFrameNames("ninja", {
 			start: 0,
 			end: 9,
