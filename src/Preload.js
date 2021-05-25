@@ -13,6 +13,8 @@ export class Preload extends Phaser.Scene {
 	}
 
 	preload() {
+		this.loadingUI()
+
 		this.load.image("sky", sky)
 		this.load.image("sea", sea)
 		this.load.image("clouds", clouds)
@@ -83,7 +85,91 @@ export class Preload extends Phaser.Scene {
 			frameRate: 10,
 			repeat: 0,
 		})
+	}
 
-		this.scene.start("PlayGame")
+	loadingUI() {
+		const width = this.cameras.main.width
+		const height = this.cameras.main.height
+		const loadingText = this.make.text({
+			x: width / 2,
+			y: height / 2 - 50,
+			text: "Loading...",
+			style: {
+				font: "20px monospace",
+				fill: "#ffffff",
+			},
+		})
+		loadingText.setOrigin(0.5, 0.5)
+
+		const percentText = this.make.text({
+			x: width / 2,
+			y: height / 2 + height / 12,
+			text: "0%",
+			style: {
+				font: "18px monospace",
+				fill: "#ffffff",
+			},
+		})
+		percentText.setOrigin(0.5, 0.5)
+
+		const progressBoxWidth = width / 3
+		const progressBoxHeight = progressBoxWidth / 6
+		const progressBarMargin = progressBoxHeight / 6
+		const progressBox = this.add.graphics()
+		const progressBar = this.add.graphics()
+
+		progressBox.fillStyle(0x222222, 0.8)
+		progressBox.fillRect(
+			(width - progressBoxWidth) / 2,
+			(height - progressBoxHeight) / 2,
+			progressBoxWidth,
+			progressBoxHeight
+		)
+
+		this.load.on("progress", (value) => {
+			percentText.setText(parseInt(value * 100) + "%")
+			console.log(value)
+			progressBar.clear()
+			progressBar.fillStyle(0xffffff, 1)
+			progressBar.fillRect(
+				(width - progressBoxWidth) / 2 + progressBarMargin,
+				(height - progressBoxHeight) / 2 + progressBarMargin,
+				(progressBoxWidth - progressBarMargin * 2) * value,
+				progressBoxHeight - progressBarMargin * 2
+			)
+		})
+
+		this.load.on("fileprogress", function (file) {
+			console.log(file.src)
+		})
+
+		this.load.on("complete", () => {
+			progressBar.destroy()
+			progressBox.destroy()
+			loadingText.destroy();
+			percentText.destroy();
+			this.startUI()
+		})
+	}
+
+	startUI() {
+		const width = this.cameras.main.width
+		const height = this.cameras.main.height
+		const startText = this.make.text({
+			x: width / 2,
+			y: height / 2,
+			text: "Start",
+			style: {
+				font: "50px monospace",
+				fill: "#ffffff",
+			},
+		})
+		startText.setOrigin(0.5, 0.5)
+		startText
+			.setInteractive()
+			.on("pointerdown", () => {
+				startText.destroy()
+				this.scene.start("PlayGame")
+			})
 	}
 }

@@ -9,7 +9,7 @@ window.onload = function () {
 		width: window.innerWidth,
 		height: 480,
 		scene: [Preload, PlayLevel],
-		backgroundColor: 0x444444,
+		transparent: true,
 		physics: {
 			default: "matter",
 			matter: {
