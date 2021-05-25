@@ -2,7 +2,6 @@ import Phaser from "phaser"
 import sky from "./assets/sky.png"
 import sea from "./assets/sea.png"
 import clouds from "./assets/clouds.png"
-// import fruits from "./assets/fruits.png"
 import farGrounds from "./assets/farGrounds.png"
 import noaArtwork from "./assets/noaArtwork.png"
 import mainTileset from './assets/main_tileset.extruded.png'
@@ -13,12 +12,22 @@ export class Preload extends Phaser.Scene {
 	}
 
 	preload() {
+		const width = this.cameras.main.width
+		const height = this.cameras.main.height
+		this.contentBg = this.add.graphics()
+		this.contentBg.fillStyle(0x222222, 0.8)
+		this.contentBg.fillRect(
+			(width - width / 2.5) / 2,
+			height / 3,
+			width / 2.5,
+			height / 3
+		)
 		this.loadingUI()
+
 
 		this.load.image("sky", sky)
 		this.load.image("sea", sea)
 		this.load.image("clouds", clouds)
-		// this.load.image("fruits", fruits)
 		this.load.image("farGrounds", farGrounds)
 		this.load.image('mainTileset', mainTileset)
 		this.load.image("noaArtwork", noaArtwork)

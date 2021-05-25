@@ -5,20 +5,6 @@ let gameOptions = {
 	jumps: 2,
 }
 
-// @TODO
-// V. prevent stop on smooth surface
-// V. properly detect onCollide and setOnCollideEnd
-  // detect is on platform
-  // set platform to isStatic
-// V. load other layers
-// V. properly scale
-// V. fix size of world
-// V. create a dead zone
-// 5. implement parallax
-// V. add Noa's artwork to tilemap
-// V. Fix flicker
-// V. Fix grid
-
 export class PlayLevel extends Phaser.Scene {
 	constructor() {
 		super("PlayGame")
