@@ -6,6 +6,14 @@ let gameOptions = {
 }
 const gameHeight = 480
 
+// TOD add a bunch more trees, logs and bushes
+// TODO add points
+// TODO add enemies
+
+// TODO add sensors on bottpm of player
+// TODO add physics to sides of tiles
+// TODO make player bounce if hit from the side
+// TODO add fullscreen
 export class PlayLevel extends Phaser.Scene {
 	constructor() {
 		super("PlayGame")
@@ -22,64 +30,23 @@ export class PlayLevel extends Phaser.Scene {
     const width = map.widthInPixels
 		const tileset = map.addTilesetImage("bg_tileset", "mainTileset", 16, 16, 1, 2)
     const noaArtwork = map.addTilesetImage("noaArtwork", "noaArtwork")
-    const farGrounds = map.addTilesetImage("farGrounds", "farGrounds")
-
-		const container = this.add.container(0, 0)
-		const bg = this.add
-			.tileSprite(
-				0,
-				0,
-				this.sys.canvas.width,
-				this.sys.canvas.height,
-				"sprites",
-				"bg.png"
-			)
-			.setOrigin(0, 0)
-		const sky = this.add
-			.tileSprite(
-				0,
-				480 - 92 - 304,
-				this.sys.canvas.width,
-				304,
-				"sprites",
-				"sky.png"
-			)
-			.setOrigin(0, 0)
-		this.clouds = this.add
-			.tileSprite(
-				0,
-				480 - 92 - 240,
-				this.sys.canvas.width,
-				240,
-				"sprites",
-				"clouds.png"
-			)
-			.setOrigin(0, 0)
-		this.sea = this.add
-			.tileSprite(0, 480 - 96, this.sys.canvas.width, 96, "sprites", "sea.png")
-			.setOrigin(0, 0)
-
-		container
-			.add([bg, sky, this.clouds, this.sea])
-			.setScrollFactor(0, 1)
-
-
+		const farGrounds = map.addTilesetImage("farGrounds", "farGrounds")
+		this.addBg()
     map.createLayer("noaLayer2", noaArtwork, 0, 0)
     map.createLayer("noaLayer1", noaArtwork, 0, 0)
     map.createLayer("trees", tileset, 0, 0)
     map.createLayer("farGrounds", farGrounds, 0, 0)
-    map.createLayer("rocky_bg", tileset, 0, 0)
+    map.createLayer("rockyBg", tileset, 0, 0)
+		console.log(map.layers)
 
 		const platform = map.createLayer("platform", tileset, 0, 0)
-
-		platform.setCollisionFromCollisionGroup()
+		platform.setCollisionByProperty({ collides: true })
 		this.matter.world.convertTilemapLayer(platform)
     this.matter.world.setBounds(map.widthInPixels, 480)
 
     const powerUps = map.objects.find((x) => x.name === "powerUps")
 		powerUps.objects.forEach(({ x, y }) => {
 			this.addPowerUp({ posX: x, posY: y })
-			console.log(x)
 		})
 
 		this.addPlayer({
@@ -87,13 +54,16 @@ export class PlayLevel extends Phaser.Scene {
 			posY: 100,
 		})
 
-		this.player.setOnCollide(() => {
-      // we need to filter platform
-      if (!this.isRunning) {
-        this.run()
-        if (!this.hasStarted) this.speed = 3
-        this.hasStarted = true
-      }
+		this.player.setOnCollide((pair) => {
+			if (
+				!this.isRunning &&
+				pair.bodyA.gameObject.tile &&
+				pair.bodyA.gameObject.tile.layer.name === "platform"
+			) {
+				this.run()
+				if (!this.hasStarted) this.speed = 3
+				this.hasStarted = true
+			}
 		})
 
     const camera = this.cameras.main
@@ -117,9 +87,10 @@ export class PlayLevel extends Phaser.Scene {
 		const scale = (this.sys.canvas.height * 0.1) / initrinsicNinjaHeight
 		this.player = this.matter.add
 			.sprite(posX, posY, "sprites", "run/Run__000.png", {
-        label: 'player',
-        chamfer: { radius: [160, 80, 160, 80] },
+				label: "player",
+				chamfer: { radius: [160, 80, 160, 80] },
 				restitution: 0.25,
+				friction: 0
 			})
 			.setScale(scale)
 			.setFixedRotation()
@@ -138,14 +109,12 @@ export class PlayLevel extends Phaser.Scene {
             this.add
 							.sprite(posX, posY, "explosion1", "frame_0000.png")
 							.anims.play("explode")
-              this.speed = 8
-              this.time.delayedCall(3000, () => { this.speed = 3} )
+            this.speed = 10
           }
         }
 			})
 			.setScale(0.5)
 			.anims.play("play")
-      console.log("powerUp", powerUp)
   }
 
 	run() {
@@ -181,6 +150,46 @@ export class PlayLevel extends Phaser.Scene {
 			this.sea.tilePositionX += 0.25 * this.cameraVelocityX
     }
 
+		this.speed = Math.max(3, this.speed - 0.05)
 		this.cameraPrevX = this.cameras.main.scrollX
+	}
+
+	addBg() {
+		const container = this.add.container(0, 0)
+		const bg = this.add
+			.tileSprite(
+				0,
+				0,
+				this.sys.canvas.width,
+				this.sys.canvas.height,
+				"sprites",
+				"bg.png"
+			)
+			.setOrigin(0, 0)
+		const sky = this.add
+			.tileSprite(
+				0,
+				480 - 92 - 304,
+				this.sys.canvas.width,
+				304,
+				"sprites",
+				"sky.png"
+			)
+			.setOrigin(0, 0)
+		this.clouds = this.add
+			.tileSprite(
+				0,
+				480 - 92 - 240,
+				this.sys.canvas.width,
+				240,
+				"sprites",
+				"clouds.png"
+			)
+			.setOrigin(0, 0)
+		this.sea = this.add
+			.tileSprite(0, 480 - 96, this.sys.canvas.width, 96, "sprites", "sea.png")
+			.setOrigin(0, 0)
+
+		container.add([bg, sky, this.clouds, this.sea]).setScrollFactor(0, 1)
 	}
 }
