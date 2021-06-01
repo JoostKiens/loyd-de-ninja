@@ -12,10 +12,15 @@ window.onload = function () {
 		transparent: true,
 		autoFocus: true,
 		physics: {
-			default: "matter",
-			matter: {
-				gravity: { y: 1 },
-				enableSleep: true,
+			// default: "matter",
+			// matter: {
+			// 	gravity: { y: 1 },
+			// 	enableSleep: true,
+			// 	debug: true,
+			// },
+			default: "arcade",
+			arcade: {
+				gravity: { y: 200 },
 				debug: true,
 			},
 		},

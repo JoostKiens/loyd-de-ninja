@@ -37,12 +37,16 @@ export class PlayLevel extends Phaser.Scene {
     map.createLayer("trees", tileset, 0, 0)
     map.createLayer("farGrounds", farGrounds, 0, 0)
     map.createLayer("rockyBg", tileset, 0, 0)
-		console.log(map.layers)
 
-		const platform = map.createLayer("platform", tileset, 0, 0)
-		platform.setCollisionByProperty({ collides: true })
-		this.matter.world.convertTilemapLayer(platform)
-    this.matter.world.setBounds(map.widthInPixels, 480)
+		//const platform = this.physics.add.staticGroup()
+		const platformLayer = map.createStaticLayer("platform", tileset, 0, 0)
+		platformLayer.setCollisionByProperty({ collides: true })
+
+		//platform.add(platformLayer)
+
+		// this.physics.world.enable([platformLayer])
+		// this.matter.world.convertTilemapLayer(platform)
+    // this.matter.world.setBounds(map.widthInPixels, 480)
 
     const powerUps = map.objects.find((x) => x.name === "powerUps")
 		powerUps.objects.forEach(({ x, y }) => {
@@ -54,17 +58,24 @@ export class PlayLevel extends Phaser.Scene {
 			posY: 100,
 		})
 
-		this.player.setOnCollide((pair) => {
-			if (
-				!this.isRunning &&
-				pair.bodyA.gameObject.tile &&
-				pair.bodyA.gameObject.tile.layer.name === "platform"
-			) {
-				this.run()
-				if (!this.hasStarted) this.speed = 3
-				this.hasStarted = true
-			}
+		// this.physics.world.enable([this.player])
+
+		this.physics.add.collider(platformLayer, this.player, (a, b) => {
+			console.log("collide", a, b)
 		})
+
+
+		// this.player.setOnCollide((pair) => {
+		// 	if (
+		// 		!this.isRunning &&
+		// 		pair.bodyA.gameObject.tile &&
+		// 		pair.bodyA.gameObject.tile.layer.name === "platform"
+		// 	) {
+		// 		this.run()
+		// 		if (!this.hasStarted) this.speed = 3
+		// 		this.hasStarted = true
+		// 	}
+		// })
 
     const camera = this.cameras.main
     camera.setBounds(0, 0, width, gameHeight)
@@ -85,19 +96,19 @@ export class PlayLevel extends Phaser.Scene {
 	addPlayer({ posX, posY }) {
 		const initrinsicNinjaHeight = 483
 		const scale = (this.sys.canvas.height * 0.1) / initrinsicNinjaHeight
-		this.player = this.matter.add
+		this.player = this.physics.add
 			.sprite(posX, posY, "sprites", "run/Run__000.png", {
 				label: "player",
-				chamfer: { radius: [160, 80, 160, 80] },
-				restitution: 0.25,
-				friction: 0
+				// chamfer: { radius: [160, 80, 160, 80] },
+				// restitution: 0.25,
+				// friction: 0
 			})
 			.setScale(scale)
-			.setFixedRotation()
+			//.setFixedRotation()
 	}
 
   addPowerUp({ posX, posY }) {
-    const powerUp = this.matter.add
+    const powerUp = this.add
 			.sprite(posX, posY, "fireball", "fireball_001.png", {
 				label: "powerUp",
 				isStatic: true,
@@ -109,12 +120,13 @@ export class PlayLevel extends Phaser.Scene {
             this.add
 							.sprite(posX, posY, "explosion1", "frame_0000.png")
 							.anims.play("explode")
-            this.speed = 10
+            this.speed = 15
           }
         }
 			})
 			.setScale(0.5)
 			.anims.play("play")
+		this.physics.world.enable([powerUp])
   }
 
 	run() {
@@ -124,15 +136,17 @@ export class PlayLevel extends Phaser.Scene {
 
 	// the player jumps when on the ground, or once in the air as long as there are jumps left and the first jump was on the ground
 	jump() {
+		console.log('jump')
 		if (
-			this.isRunning ||
-			(this.playerJumps > 0 && this.playerJumps < gameOptions.jumps)
+			true
+			// this.isRunning ||
+			//(this.playerJumps > 0 && this.playerJumps < gameOptions.jumps)
 		) {
 			if (this.isRunning) {
 				this.playerJumps = 0
 			}
       this.isRunning = false
-			this.player.setVelocityY(gameOptions.jumpForce * -1)
+			this.player.setVelocityY(gameOptions.jumpForce * -20)
 			this.player.anims.play("jump")
       //this.player.anims.play("jumpThrow")
 			this.playerJumps++
@@ -150,7 +164,7 @@ export class PlayLevel extends Phaser.Scene {
 			this.sea.tilePositionX += 0.25 * this.cameraVelocityX
     }
 
-		this.speed = Math.max(3, this.speed - 0.05)
+		this.speed = Math.max(1.5, this.speed - 0.05)
 		this.cameraPrevX = this.cameras.main.scrollX
 	}
 
