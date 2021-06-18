@@ -89,6 +89,19 @@ export class Preload extends Phaser.Scene {
 			repeat: -1,
 		})
 
+		this.anims.create({
+			key: "idle",
+			frames: this.anims.generateFrameNames("sprites", {
+				start: 0,
+				end: 9,
+				zeroPad: 3,
+				prefix: "idle/Idle__",
+				suffix: ".png",
+			}),
+			frameRate: 24,
+			repeat: -1,
+		})
+
 		const jumpFrames = this.anims.generateFrameNames("sprites", {
 			start: 0,
 			end: 9,
