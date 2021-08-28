@@ -1,6 +1,6 @@
 import Phaser from "phaser"
 
-const fruistMap = {
+const fruitsMap = {
   broccoli: -100,
   orange: 50,
   chilli: 150,
@@ -11,7 +11,7 @@ export class Fruit extends Phaser.GameObjects.Container {
 	constructor(scene, x, y, type) {
     super(scene, x - 32, y - 32)
     this.sprite = new Phaser.GameObjects.Sprite(scene, 32, 32, type)
-    this.text = new Phaser.GameObjects.Text(scene, 0, 0, fruistMap[type], {
+    this.text = new Phaser.GameObjects.Text(scene, 0, 0, fruitsMap[type], {
 			font: "20px monospace",
 			fill: "#ffffff",
 			stroke: "#000",
