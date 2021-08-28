@@ -2,37 +2,23 @@ import Phaser from "phaser"
 import { Preload } from './Preload'
 import { PlayLevel } from "./PlayLevel"
 
-let game
 window.onload = function () {
-	let gameConfig = {
+	new Phaser.Game({
 		type: Phaser.AUTO,
-		width: window.innerWidth,
-		height: window.innerHeight,
 		scene: [Preload, PlayLevel],
-		transparent: true,
-		autoFocus: true,
+		backgroundColor: '#212121',
+		scale: {
+			mode: Phaser.Scale.FIT,
+			autoCenter: Phaser.Scale.CENTER_BOTH,
+			width: 800,
+			height: 450,
+		},
 		physics: {
-			// default: "matter",
-			// matter: {
-			// 	gravity: { y: 1 },
-			// 	enableSleep: true,
-			// 	debug: true,
-			// },
 			default: "arcade",
 			arcade: {
 				gravity: { y: 400 },
-				debug: true,
+				debug: false,
 			},
 		},
-	}
-	game = new Phaser.Game(gameConfig)
-	resize()
-	window.addEventListener("resize", resize, false)
-}
-
-function resize() {
-	game.scale.resize(
-		Math.round((window.innerWidth / window.innerHeight) * window.innerHeight),
-		window.innerHeight
-	)
+	})
 }

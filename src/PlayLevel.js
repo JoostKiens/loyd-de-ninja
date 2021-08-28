@@ -10,12 +10,6 @@ let gameOptions = {
 	decelerateInAir: 5,
 	decelerateOnGround: 2.5
 }
-const gameHeight = 480
-
-// TODO add a bunch more trees, logs and bushes
-// TODO add points
-// TODO add enemies
-// TODO add fullscreen
 export class PlayLevel extends Phaser.Scene {
 	constructor() {
 		super("PlayGame")
@@ -29,7 +23,6 @@ export class PlayLevel extends Phaser.Scene {
 		this.speed = 0
 
 		const map = this.make.tilemap({ key: "level2" })
-		const width = map.widthInPixels
 		const tileset = map.addTilesetImage(
 			"bg_tileset",
 			"mainTileset",
@@ -47,8 +40,6 @@ export class PlayLevel extends Phaser.Scene {
 		map.createLayer("farGrounds", farGrounds, 0, 0)
 		map.createLayer("rockyBg", tileset, 0, 0)
 
-		console.log(map)
-
 		const platform = map.createLayer("platform", tileset, 0, 0)
 		platform.setCollisionByProperty({ collides: true })
 
@@ -63,7 +54,7 @@ export class PlayLevel extends Phaser.Scene {
 		const initrinsicNinjaHeight = 483
 		const scale = (map.heightInPixels * 0.15) / initrinsicNinjaHeight
 		this.player = this.physics.add
-			.sprite(100, gameHeight / 2, "sprites", "run/Run__000.png", {
+			.sprite(100, this.sys.canvas.height / 2, "sprites", "run/Run__000.png", {
 				label: "player",
 			})
 			// .setDrag(1000, 0)
@@ -78,10 +69,10 @@ export class PlayLevel extends Phaser.Scene {
 		this.physics.add.collider(this.player, platform)
 
 		const camera = this.cameras.main
-		camera.setBounds(0, 0, width, gameHeight)
+		camera.setBounds(0, 0, map.widthInPixels, this.sys.canvas.height)
 		camera.height = this.sys.canvas.height
 		camera.roundPixels = true
-		camera.zoom = this.sys.canvas.height / 480
+		camera.zoom = this.sys.canvas.height / this.sys.canvas.height
 		camera.startFollow(
 			this.player,
 			false,
