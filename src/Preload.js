@@ -12,10 +12,9 @@ export class Preload extends Phaser.Scene {
 		super("Preload")
 	}
 
-	// TODO: destroy everything
 	preload() {
-		const width = this.cameras.main.width
-		const height = this.cameras.main.height
+		const width = this.sys.canvas.width
+		const height = this.sys.canvas.height
 		this.contentBg = this.add.graphics()
 		this.contentBg.fillStyle(0x222222, 0.8)
 		this.contentBg.fillRect(
@@ -194,11 +193,9 @@ export class Preload extends Phaser.Scene {
 	}
 
 	startUI() {
-		const width = this.cameras.main.width
-		const height = this.cameras.main.height
 		const startText = this.make.text({
-			x: width / 2,
-			y: height / 2,
+			x: this.sys.canvas.width / 2,
+			y: 300,
 			text: "Start",
 			style: {
 				font: "50px monospace",
