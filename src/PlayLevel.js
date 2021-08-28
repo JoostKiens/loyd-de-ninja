@@ -1,4 +1,5 @@
 import Phaser from "phaser"
+import { Background } from './Background'
 
 let gameOptions = {
 	jumpVelocityY: 350,
@@ -19,7 +20,7 @@ export class PlayLevel extends Phaser.Scene {
 		this.isRunning = false
 		this.hasStarted = false
 		this.cameraPrevX = 0
-		this.cameraVelocityX = 0
+		// this.cameraVelocityX = 0
 		this.speed = 0
 
 		const map = this.make.tilemap({ key: "level2" })
@@ -33,7 +34,7 @@ export class PlayLevel extends Phaser.Scene {
 		)
 		const noaArtwork = map.addTilesetImage("noaArtwork", "noaArtwork")
 		const farGrounds = map.addTilesetImage("farGrounds", "farGrounds")
-		this.addBg()
+		this.background = new Background(this, 0, 0)
 		map.createLayer("noaLayer2", noaArtwork, 0, 0)
 		map.createLayer("noaLayer1", noaArtwork, 0, 0)
 		map.createLayer("trees", tileset, 0, 0)
@@ -84,7 +85,6 @@ export class PlayLevel extends Phaser.Scene {
 		this.input.on("pointerdown", this.jump, this)
 	}
 
-
 	addPowerUp({ posX, posY }) {
 		const powerUp = this.physics.add
 			.sprite(posX, posY, "fireball", "fireball_001.png", {
@@ -134,14 +134,13 @@ export class PlayLevel extends Phaser.Scene {
 	update(x) {
 		const onGround = this.player.body.blocked.down
 		const isSideBlocked =
-			this.player.body.blocked.right || this.player.body.blocked.lef
-		this.cameraVelocityX = this.cameras.main.scrollX - this.cameraPrevX
+			this.player.body.blocked.right || this.player.body.blocked.left
 		if (this.player.y > this.sys.canvas.height) {
+			// Dead
 			this.scene.start("PlayGame")
 		} else {
 			this.player.setVelocityX(this.speed)
-			this.clouds.tilePositionX += 0.15 * this.cameraVelocityX
-			this.sea.tilePositionX += 0.25 * this.cameraVelocityX
+			this.background.update(this.cameras.main.scrollX - this.cameraPrevX)
 		}
 
 		this.speed = Math.max(
@@ -161,44 +160,5 @@ export class PlayLevel extends Phaser.Scene {
 		else if (this.player.anims.currentAnim && this.player.anims.currentAnim.key === "run") {
 			this.player.anims.stop()
 		}
-	}
-
-	addBg() {
-		const container = this.add.container(0, 0)
-		const bg = this.add
-			.tileSprite(
-				0,
-				0,
-				this.sys.canvas.width,
-				this.sys.canvas.height,
-				"sprites",
-				"bg.png"
-			)
-			.setOrigin(0, 0)
-		const sky = this.add
-			.tileSprite(
-				0,
-				480 - 92 - 304,
-				this.sys.canvas.width,
-				304,
-				"sprites",
-				"sky.png"
-			)
-			.setOrigin(0, 0)
-		this.clouds = this.add
-			.tileSprite(
-				0,
-				480 - 92 - 240,
-				this.sys.canvas.width,
-				240,
-				"sprites",
-				"clouds.png"
-			)
-			.setOrigin(0, 0)
-		this.sea = this.add
-			.tileSprite(0, 480 - 96, this.sys.canvas.width, 96, "sprites", "sea.png")
-			.setOrigin(0, 0)
-
-		container.add([bg, sky, this.clouds, this.sea]).setScrollFactor(0, 1)
 	}
 }
