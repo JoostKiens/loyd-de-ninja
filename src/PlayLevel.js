@@ -47,6 +47,8 @@ export class PlayLevel extends Phaser.Scene {
 		map.createLayer("farGrounds", farGrounds, 0, 0)
 		map.createLayer("rockyBg", tileset, 0, 0)
 
+		console.log(map)
+
 		const platform = map.createLayer("platform", tileset, 0, 0)
 		platform.setCollisionByProperty({ collides: true })
 
@@ -59,7 +61,7 @@ export class PlayLevel extends Phaser.Scene {
 
 
 		const initrinsicNinjaHeight = 483
-		const scale = (this.sys.canvas.height * 0.1) / initrinsicNinjaHeight
+		const scale = (map.heightInPixels * 0.15) / initrinsicNinjaHeight
 		this.player = this.physics.add
 			.sprite(100, gameHeight / 2, "sprites", "run/Run__000.png", {
 				label: "player",
