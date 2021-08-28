@@ -10,7 +10,7 @@ export class PlayLevel extends Phaser.Scene {
 	create() {
 		this.cameraPrevX = 0
 
-		const platform = this.createPlatform()
+		const { platform, map } = this.createPlatform()
 		this.player = new Player(this, 100, this.sys.canvas.height / 2)
 
 		const powerUpObjects = map.objects.find((x) => x.name === "powerUps")
@@ -51,7 +51,6 @@ export class PlayLevel extends Phaser.Scene {
 
 		this.background.update(this.cameras.main.scrollX - this.cameraPrevX)
 		this.cameraPrevX = this.cameras.main.scrollX
-
 		this.player.update()
 	}
 
@@ -76,6 +75,6 @@ export class PlayLevel extends Phaser.Scene {
 
 		const platform = map.createLayer("platform", tileset, 0, 0)
 		platform.setCollisionByProperty({ collides: true })
-		return platform
+		return { platform, map }
 	}
 }
