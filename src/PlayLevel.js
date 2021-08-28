@@ -10,34 +10,36 @@ export class PlayLevel extends Phaser.Scene {
 	}
 	create() {
 		this.cameraPrevX = 0
+		this.points = {
+			distance: 0,
+			fruits: 0,
+		}
 
 		const { platform, map } = this.createPlatform()
 		this.player = new Player(this, 100, this.sys.canvas.height / 2)
 
 		const fruitObjects = map.objects.find((x) => x.name === "fruits")
-		this.fruits = fruitObjects.objects.map(({ x, y }) => new Fruit(this, x, y))
+		this.fruits = fruitObjects.objects.map(({ x, y, type }) => new Fruit(this, x, y, type))
 
 		const powerUpObjects = map.objects.find((x) => x.name === "powerUps")
-		this.powerUps = powerUpObjects.objects.map(({ x, y }) => new PowerUp(this, x, y))
+		this.powerUps = powerUpObjects.objects.map(
+			({ x, y }) => new PowerUp(this, x, y)
+		)
 
 		// Player hits PowerUp
-		this.physics.add.overlap(
-			this.player,
-			this.powerUps,
-			(player, powerUp) => {
-				player.powerUp()
-				powerUp.destroy()
-			}
-		)
+		this.physics.add.overlap(this.player, this.powerUps, (player, powerUp) => {
+			player.powerUp()
+			powerUp.destroy()
+		})
 
-		this.physics.add.overlap(
-			this.player,
-			this.fruits,
-			(player, fruit) => {
-				console.log('extra points')
-				fruit.destroy()
+		// Player hits Fruit
+		this.physics.add.overlap(this.player, this.fruits, (_, fruit) => {
+			if (!fruit.isHit) {
+				console.log(this.points.fruits)
+				this.points.fruits += 100
+				fruit.hit()
 			}
-		)
+		}, null, this)
 
 		// Player walks on Platform
 		this.physics.add.collider(this.player, platform)
@@ -48,7 +50,9 @@ export class PlayLevel extends Phaser.Scene {
 		camera.startFollow(this.player)
 
 		// Jump on pointerdown
-		this.input.on("pointerdown", () => { this.player.jump() })
+		this.input.on("pointerdown", () => {
+			this.player.jump()
+		})
 	}
 
 	update(x) {
@@ -60,7 +64,9 @@ export class PlayLevel extends Phaser.Scene {
 
 		this.background.update(this.cameras.main.scrollX - this.cameraPrevX)
 		this.cameraPrevX = this.cameras.main.scrollX
+		this.points.distance = Math.round(this.cameras.main.scrollX)
 		this.player.update()
+		console.log('points', this.points.distance, this.points.fruits)
 	}
 
 	createPlatform() {
@@ -75,15 +81,12 @@ export class PlayLevel extends Phaser.Scene {
 		)
 		const noaArtwork = map.addTilesetImage("noaArtwork", "noaArtwork")
 		const farGrounds = map.addTilesetImage("farGrounds", "farGrounds")
-		//const fruits = map.addTilesetImage("fruits", "fruits", 128, 64)
 		this.background = new Background(this, 0, 0)
 		map.createLayer("noaLayer2", noaArtwork, 0, 0)
 		map.createLayer("noaLayer1", noaArtwork, 0, 0)
 		map.createLayer("trees", tileset, 0, 0)
 		map.createLayer("farGrounds", farGrounds, 0, 0)
 		map.createLayer("rockyBg", tileset, 0, 0)
-		//map.createFromObjects("fruits", fruits)
-		// map.createLayer("fruits", fruits, 0, 0)
 
 		const platform = map.createLayer("platform", tileset, 0, 0)
 		platform.setCollisionByProperty({ collides: true })

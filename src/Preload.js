@@ -6,7 +6,10 @@ import farGrounds from "./assets/farGrounds.png"
 import noaArtwork from "./assets/noaArtwork.png"
 import mainTileset from './assets/main_tileset.extruded.png'
 import logo from "./assets/logo.png"
-import cherry from "./assets/cherry.png"
+import chilli from "./assets/chilli.png"
+import orange from "./assets/orange.png"
+import broccoli from "./assets/broccoli.png"
+import strawberry from "./assets/strawberry.png"
 
 export class Preload extends Phaser.Scene {
 	constructor() {
@@ -34,7 +37,10 @@ export class Preload extends Phaser.Scene {
 		this.load.image("farGrounds", farGrounds)
 		this.load.image('mainTileset', mainTileset)
 		this.load.image("noaArtwork", noaArtwork)
-		this.load.image("cherry", cherry)
+		this.load.image("chilli", chilli)
+		this.load.image("orange", orange)
+		this.load.image("strawberry", strawberry)
+		this.load.image("broccoli", broccoli)
 		// this.load.tilemapTiledJSON("fruits", "fruits.json", ".")
 		this.load.multiatlas("sprites", "sprites.json", ".")
 		this.load.multiatlas("fireball", "fireball.json", ".")
