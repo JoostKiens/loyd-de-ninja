@@ -1,27 +1,15 @@
 import Phaser from "phaser"
 import { Background } from './Background'
+import { PowerUp } from './PowerUp'
+import { Player } from './Player'
 
-let gameOptions = {
-	jumpVelocityY: 350,
-	jumps: 2,
-	baseVelocityX: 300,
-	powerUpVelocityX: 800,
-	maxVelocityX: 800,
-	maxVelocityY: 800,
-	decelerateInAir: 5,
-	decelerateOnGround: 2.5
-}
 export class PlayLevel extends Phaser.Scene {
 	constructor() {
 		super("PlayGame")
 	}
 	create() {
-		this.playerJumps = 0
-		this.isRunning = false
 		this.hasStarted = false
 		this.cameraPrevX = 0
-		// this.cameraVelocityX = 0
-		this.speed = 0
 
 		const map = this.make.tilemap({ key: "level2" })
 		const tileset = map.addTilesetImage(
@@ -44,121 +32,47 @@ export class PlayLevel extends Phaser.Scene {
 		const platform = map.createLayer("platform", tileset, 0, 0)
 		platform.setCollisionByProperty({ collides: true })
 
-		// const debugGraphics = this.add.graphics().setAlpha(0.75)
-		// platform.renderDebug(debugGraphics, {
-		// 	tileColor: null, // Color of non-colliding tiles
-		// 	collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
-		// 	faceColor: new Phaser.Display.Color(40, 39, 37, 255), // Color of colliding face edges
-		// })
+		this.player = new Player(this, 100, this.sys.canvas.height / 2)
 
-
-		const initrinsicNinjaHeight = 483
-		const scale = (map.heightInPixels * 0.15) / initrinsicNinjaHeight
-		this.player = this.physics.add
-			.sprite(100, this.sys.canvas.height / 2, "sprites", "run/Run__000.png", {
-				label: "player",
-			})
-			// .setDrag(1000, 0)
-			.setMaxVelocity(gameOptions.maxVelocityX, gameOptions.maxVelocityY)
-			.setScale(scale)
-
-		const powerUps = map.objects.find((x) => x.name === "powerUps")
-		powerUps.objects.forEach(({ x, y }) => {
-			this.addPowerUp({ posX: x, posY: y })
-		})
-
-		this.physics.add.collider(this.player, platform)
-
-		const camera = this.cameras.main
-		camera.setBounds(0, 0, map.widthInPixels, this.sys.canvas.height)
-		camera.height = this.sys.canvas.height
-		camera.roundPixels = true
-		camera.zoom = this.sys.canvas.height / this.sys.canvas.height
-		camera.startFollow(
-			this.player,
-			false,
-			0.05,
-			1,
-			-this.sys.canvas.width / 8,
-			0
+		const powerUpObjects = map.objects.find((x) => x.name === "powerUps")
+		this.powerUps = powerUpObjects.objects.map(
+			({ x, y }) => new PowerUp(this, x, y)
 		)
-		this.input.on("pointerdown", this.jump, this)
-	}
 
-	addPowerUp({ posX, posY }) {
-		const powerUp = this.physics.add
-			.sprite(posX, posY, "fireball", "fireball_001.png", {
-				label: "powerUp",
-			})
-			.anims.play("play")
-			.setScale(0.5)
-			.setImmovable(true)
-
-		powerUp.body.allowGravity = false
-
+		// Player hits PowerUp
 		this.physics.add.overlap(
 			this.player,
-			powerUp,
-			() => {
-				this.speed = gameOptions.powerUpVelocityX
-				powerUp.disableBody(true, true)
+			this.powerUps,
+			(player, powerUp) => {
+				player.powerUp()
+				powerUp.destroy()
 			},
 			null,
 			this
 		)
-	}
 
-	run() {
-		this.player.anims.play("run")
-		this.isRunning = true
-	}
+		// Player walks on Platform
+		this.physics.add.collider(this.player, platform)
 
-	// the player jumps when on the ground, or once in the air as long as there are jumps left and the first jump was on the ground
-	// Should we move all this to update?
-	jump() {
-		const onGround = this.player.body.blocked.down
-		if (
-			onGround ||
-			(this.playerJumps > 0 && this.playerJumps < gameOptions.jumps)
-		) {
-			if (onGround) this.playerJumps = 0
-			const jumpsLeft = gameOptions.jumps - this.playerJumps
-			this.player.setVelocityY(
-				-(gameOptions.jumpVelocityY / gameOptions.jumps) * jumpsLeft
-			)
-			this.player.anims.play("jump")
-			this.playerJumps++
-		}
+		// Camera follows player
+		const camera = this.cameras.main
+		camera.setBounds(0, 0, map.widthInPixels, this.sys.canvas.height)
+		camera.startFollow(this.player)
+
+		// Jump on pointerdown
+		this.input.on("pointerdown", () => { this.player.jump() })
 	}
 
 	update(x) {
-		const onGround = this.player.body.blocked.down
-		const isSideBlocked =
-			this.player.body.blocked.right || this.player.body.blocked.left
 		if (this.player.y > this.sys.canvas.height) {
 			// Dead
 			this.scene.start("PlayGame")
-		} else {
-			this.player.setVelocityX(this.speed)
-			this.background.update(this.cameras.main.scrollX - this.cameraPrevX)
+			return
 		}
 
-		this.speed = Math.max(
-			gameOptions.baseVelocityX,
-			this.speed -
-				(onGround
-					? gameOptions.decelerateOnGround
-					: gameOptions.decelerateInAir)
-		)
+		this.background.update(this.cameras.main.scrollX - this.cameraPrevX)
 		this.cameraPrevX = this.cameras.main.scrollX
 
-		if (onGround) {
-			if (this.player.body.velocity.x !== 0 && !isSideBlocked)
-				this.player.anims.play("run", true)
-			else this.player.anims.play("idle", true)
-		}
-		else if (this.player.anims.currentAnim && this.player.anims.currentAnim.key === "run") {
-			this.player.anims.stop()
-		}
+		this.player.update()
 	}
 }
