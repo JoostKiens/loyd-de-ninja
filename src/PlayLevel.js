@@ -70,7 +70,6 @@ export class PlayLevel extends Phaser.Scene {
 		this.scoreCount.distance = Math.round(this.cameras.main.scrollX)
 		this.player.update()
 		this.score.update(this.scoreCount.fruits + this.scoreCount.distance)
-		// console.log('points', this.score.distance, this.score.fruits)
 	}
 
 	createPlatform() {

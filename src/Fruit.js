@@ -31,6 +31,5 @@ export class Fruit extends Phaser.GameObjects.Container {
 		this.isHit = true
     this.text.visible = true
     this.sprite.visible = false
-		console.log("hit")
 	}
 }

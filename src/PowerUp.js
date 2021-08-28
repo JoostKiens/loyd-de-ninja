@@ -10,6 +10,5 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     scene.add.existing(this)
     scene.physics.world.enable(this)
     this.body.allowGravity = false
-    // console.log(this.body)
   }
 }
