@@ -8,30 +8,9 @@ export class PlayLevel extends Phaser.Scene {
 		super("PlayGame")
 	}
 	create() {
-		this.hasStarted = false
 		this.cameraPrevX = 0
 
-		const map = this.make.tilemap({ key: "level2" })
-		const tileset = map.addTilesetImage(
-			"bg_tileset",
-			"mainTileset",
-			16,
-			16,
-			1,
-			2
-		)
-		const noaArtwork = map.addTilesetImage("noaArtwork", "noaArtwork")
-		const farGrounds = map.addTilesetImage("farGrounds", "farGrounds")
-		this.background = new Background(this, 0, 0)
-		map.createLayer("noaLayer2", noaArtwork, 0, 0)
-		map.createLayer("noaLayer1", noaArtwork, 0, 0)
-		map.createLayer("trees", tileset, 0, 0)
-		map.createLayer("farGrounds", farGrounds, 0, 0)
-		map.createLayer("rockyBg", tileset, 0, 0)
-
-		const platform = map.createLayer("platform", tileset, 0, 0)
-		platform.setCollisionByProperty({ collides: true })
-
+		const platform = this.createPlatform()
 		this.player = new Player(this, 100, this.sys.canvas.height / 2)
 
 		const powerUpObjects = map.objects.find((x) => x.name === "powerUps")
@@ -74,5 +53,29 @@ export class PlayLevel extends Phaser.Scene {
 		this.cameraPrevX = this.cameras.main.scrollX
 
 		this.player.update()
+	}
+
+	createPlatform() {
+		const map = this.make.tilemap({ key: "level2" })
+		const tileset = map.addTilesetImage(
+			"bg_tileset",
+			"mainTileset",
+			16,
+			16,
+			1,
+			2
+		)
+		const noaArtwork = map.addTilesetImage("noaArtwork", "noaArtwork")
+		const farGrounds = map.addTilesetImage("farGrounds", "farGrounds")
+		this.background = new Background(this, 0, 0)
+		map.createLayer("noaLayer2", noaArtwork, 0, 0)
+		map.createLayer("noaLayer1", noaArtwork, 0, 0)
+		map.createLayer("trees", tileset, 0, 0)
+		map.createLayer("farGrounds", farGrounds, 0, 0)
+		map.createLayer("rockyBg", tileset, 0, 0)
+
+		const platform = map.createLayer("platform", tileset, 0, 0)
+		platform.setCollisionByProperty({ collides: true })
+		return platform
 	}
 }
