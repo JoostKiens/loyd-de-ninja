@@ -2,6 +2,7 @@ import Phaser from "phaser"
 import { Background } from './Background'
 import { PowerUp } from './PowerUp'
 import { Player } from './Player'
+import { Fruit } from "./Fruit"
 
 export class PlayLevel extends Phaser.Scene {
 	constructor() {
@@ -13,10 +14,11 @@ export class PlayLevel extends Phaser.Scene {
 		const { platform, map } = this.createPlatform()
 		this.player = new Player(this, 100, this.sys.canvas.height / 2)
 
+		const fruitObjects = map.objects.find((x) => x.name === "fruits")
+		this.fruits = fruitObjects.objects.map(({ x, y }) => new Fruit(this, x, y))
+
 		const powerUpObjects = map.objects.find((x) => x.name === "powerUps")
-		this.powerUps = powerUpObjects.objects.map(
-			({ x, y }) => new PowerUp(this, x, y)
-		)
+		this.powerUps = powerUpObjects.objects.map(({ x, y }) => new PowerUp(this, x, y))
 
 		// Player hits PowerUp
 		this.physics.add.overlap(
@@ -25,9 +27,16 @@ export class PlayLevel extends Phaser.Scene {
 			(player, powerUp) => {
 				player.powerUp()
 				powerUp.destroy()
-			},
-			null,
-			this
+			}
+		)
+
+		this.physics.add.overlap(
+			this.player,
+			this.fruits,
+			(player, fruit) => {
+				console.log('extra points')
+				fruit.destroy()
+			}
 		)
 
 		// Player walks on Platform
@@ -66,12 +75,15 @@ export class PlayLevel extends Phaser.Scene {
 		)
 		const noaArtwork = map.addTilesetImage("noaArtwork", "noaArtwork")
 		const farGrounds = map.addTilesetImage("farGrounds", "farGrounds")
+		//const fruits = map.addTilesetImage("fruits", "fruits", 128, 64)
 		this.background = new Background(this, 0, 0)
 		map.createLayer("noaLayer2", noaArtwork, 0, 0)
 		map.createLayer("noaLayer1", noaArtwork, 0, 0)
 		map.createLayer("trees", tileset, 0, 0)
 		map.createLayer("farGrounds", farGrounds, 0, 0)
 		map.createLayer("rockyBg", tileset, 0, 0)
+		//map.createFromObjects("fruits", fruits)
+		// map.createLayer("fruits", fruits, 0, 0)
 
 		const platform = map.createLayer("platform", tileset, 0, 0)
 		platform.setCollisionByProperty({ collides: true })

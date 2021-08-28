@@ -177,9 +177,53 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":34,
+         "name":"fruits",
+         "objects":[
+                {
+                 "height":0,
+                 "id":25,
+                 "name":"fruit",
+                 "rotation":0,
+                 "type":"banana",
+                 "visible":true,
+                 "width":0,
+                 "x":352,
+                 "y":304
+                }, 
+                {
+                 "height":32,
+                 "id":26,
+                 "name":"fruit",
+                 "rotation":0,
+                 "type":"banana",
+                 "visible":true,
+                 "width":32,
+                 "x":400,
+                 "y":288
+                }, 
+                {
+                 "height":32,
+                 "id":28,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":496,
+                 "y":304
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":34,
- "nextobjectid":17,
+ "nextlayerid":36,
+ "nextobjectid":32,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.6.0",
@@ -10988,6 +11032,46 @@
                      "y":0
                     },
                  "type":"yello_grapes"
+                }, 
+                {
+                 "id":8,
+                 "type":"pear"
+                }, 
+                {
+                 "id":9,
+                 "type":"banana"
+                }, 
+                {
+                 "id":10,
+                 "type":"oramge"
+                }, 
+                {
+                 "id":11,
+                 "type":"peach"
+                }, 
+                {
+                 "id":12,
+                 "type":"kiwi"
+                }, 
+                {
+                 "id":13,
+                 "type":"blue_berry"
+                }, 
+                {
+                 "id":14,
+                 "type":"red_berry"
+                }, 
+                {
+                 "id":15,
+                 "type":"lemon"
+                }, 
+                {
+                 "id":16,
+                 "type":"coconut"
+                }, 
+                {
+                 "id":17,
+                 "type":"fig"
                 }],
          "tilewidth":16
         }],

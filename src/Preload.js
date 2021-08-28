@@ -6,6 +6,7 @@ import farGrounds from "./assets/farGrounds.png"
 import noaArtwork from "./assets/noaArtwork.png"
 import mainTileset from './assets/main_tileset.extruded.png'
 import logo from "./assets/logo.png"
+import cherry from "./assets/cherry.png"
 
 export class Preload extends Phaser.Scene {
 	constructor() {
@@ -16,7 +17,7 @@ export class Preload extends Phaser.Scene {
 		const width = this.sys.canvas.width
 		const height = this.sys.canvas.height
 		this.contentBg = this.add.graphics()
-		this.contentBg.fillStyle(0x222222, 0.8)
+		this.contentBg.fillStyle(0x212121)
 		this.contentBg.fillRect(
 			(width - width / 2.5) / 2,
 			height / 3,
@@ -33,6 +34,8 @@ export class Preload extends Phaser.Scene {
 		this.load.image("farGrounds", farGrounds)
 		this.load.image('mainTileset', mainTileset)
 		this.load.image("noaArtwork", noaArtwork)
+		this.load.image("cherry", cherry)
+		// this.load.tilemapTiledJSON("fruits", "fruits.json", ".")
 		this.load.multiatlas("sprites", "sprites.json", ".")
 		this.load.multiatlas("fireball", "fireball.json", ".")
 		this.load.multiatlas("explosion1", "explosion1.json", ".")
@@ -60,6 +63,7 @@ export class Preload extends Phaser.Scene {
 			repeat: 0,
 		})
 
+		// Move to PowerUp
 		const fireballFrames = this.anims.generateFrameNames("fireball", {
 			start: 1,
 			end: 8,

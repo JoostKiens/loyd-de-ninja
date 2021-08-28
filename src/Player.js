@@ -33,11 +33,12 @@ export class Player extends Phaser.GameObjects.Sprite {
 			this.anims.stop()
 		}
 
-		this.speed = Math.max(
-			baseVelocityX,
-			this.speed - (onGround ? decelerateOnGround : decelerateInAir)
-		)
+		// this.speed = Math.max(
+		// 	baseVelocityX,
+		// 	this.speed - (onGround ? decelerateOnGround : decelerateInAir)
+		// )
 
+		this.speed = 100
 		this.body.setVelocityX(this.speed)
 	}
 
