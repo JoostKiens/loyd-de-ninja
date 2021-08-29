@@ -22,7 +22,6 @@ export class Fruit extends Phaser.GameObjects.Container {
     this.add([this.sprite, this.text])
 		this.name = `fruit - ${type}`
 		this.isHit = false
-		this.scene = scene
 
 		scene.add.existing(this)
 		scene.physics.world.enable(this)
@@ -33,6 +32,7 @@ export class Fruit extends Phaser.GameObjects.Container {
 		this.isHit = true
     this.text.visible = true
     this.sprite.visible = false
+		this.scene.sound.play("fruitSound")
 
 		this.scene.tweens.add({
 			targets: this,

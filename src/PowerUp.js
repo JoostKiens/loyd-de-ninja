@@ -31,6 +31,7 @@ export class PowerUp extends Phaser.GameObjects.Container {
     this.isHit = true
     this.explosion.visible = true
     this.explosion.anims.play('explode')
+    this.scene.sound.play("powerUpSound")
     this.fireball.visible = false
 
     	this.scene.tweens.add({
@@ -60,7 +61,6 @@ class Explosion extends Phaser.GameObjects.Sprite {
 	constructor(scene, x, y) {
 		super(scene, x, y, "explosion1")
 		this.name = "explosion"
-    // this.anims.play("explode")
 		this.setOrigin(0.2)
 
 		scene.add.existing(this)

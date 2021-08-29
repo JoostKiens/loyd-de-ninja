@@ -2,10 +2,10 @@ import Phaser from "phaser"
 
 const initialJumpVelocityY = 350
 const maxJumps = 2
-const decelerateInAir = 3.5
-const decelerateOnGround = 4.5
+const decelerateInAir = 1.5
+const decelerateOnGround = 3.5
 const baseVelocityX = 300
-const powerUpVelocityX = 800
+const powerUpVelocityX = 200
 
 export class Player extends Phaser.GameObjects.Sprite {
 	constructor(scene, x, y) {
@@ -41,7 +41,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 	}
 
 	powerUp() {
-		this.speed = powerUpVelocityX
+		this.speed += powerUpVelocityX
 	}
 
 	jump() {

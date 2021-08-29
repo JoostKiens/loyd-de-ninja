@@ -2,6 +2,8 @@ import Phaser from "phaser"
 import farGrounds from "./assets/farGrounds.png"
 import noaArtwork from "./assets/noaArtwork.png"
 import mainTileset from './assets/main_tileset.extruded.png'
+import fruitSound from "./assets/power_up_04.mp3"
+import powerUpSound from "./assets/powerUp.mp3"
 import logo from "./assets/logo.png"
 
 export class Preload extends Phaser.Scene {
@@ -31,9 +33,15 @@ export class Preload extends Phaser.Scene {
 		this.load.multiatlas("fireball", "fireball.json", ".")
 		this.load.multiatlas("explosion1", "explosion1.json", ".")
 		this.load.tilemapTiledJSON("level2", "level_3.json")
+		this.load.audio("powerUpSound", powerUpSound)
+		this.load.audio("fruitSound", fruitSound)
 	}
 
 	create() {
+		// console.log(this.powerUpSound)
+		//this.sound.decodeAudio(this.powerUpSound)
+		// this.sound.decodeAudio("powerUpSound")
+		// this.sound.decodeAudio(powerUp)
 		const { width, height } = this.textures.get("logo").getSourceImage()
 		const logo = this.add
 			.image(this.cameras.main.width / 2, this.cameras.main.width / 5, "logo")
