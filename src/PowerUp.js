@@ -13,10 +13,10 @@ export class PowerUp extends Phaser.GameObjects.Container {
     this.explosion.visible = false
 
     this.text = new Phaser.GameObjects.Text(scene, 0, 0, 'Power Up', {
-			font: "20px VT323, monospace",
+			font: "24px VT323, monospace",
 			fill: "#ffffff",
 			stroke: "#000",
-			strokeThickness: 3,
+			strokeThickness: 4,
 		})
     this.text.setOrigin(0, 1)
 
@@ -37,6 +37,7 @@ export class PowerUp extends Phaser.GameObjects.Container {
 				targets: this.text,
 				alpha: 0,
         scale: 3,
+        x: -100,
 				ease: "Sine.easeIn",
 				duration: 200,
 			})
