@@ -5,7 +5,7 @@ export class Score extends Phaser.GameObjects.Container {
 		super(scene, x, y)
 
 		this.text = new Phaser.GameObjects.Text(scene, 0, 0, score, {
-			font: "40px monospace",
+			font: "60px VT323",
 			fill: "#ffffff",
 			stroke: "#000",
 			strokeThickness: 8,

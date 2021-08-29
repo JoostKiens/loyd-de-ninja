@@ -150,7 +150,7 @@ export class Preload extends Phaser.Scene {
 			y: height / 2 - 50,
 			text: "Loading...",
 			style: {
-				font: "20px monospace",
+				font: "20px VT323",
 				fill: "#ffffff",
 			},
 		})
@@ -161,7 +161,7 @@ export class Preload extends Phaser.Scene {
 			y: height / 2 + height / 12,
 			text: "0%",
 			style: {
-				font: "18px monospace",
+				font: "18px VT323",
 				fill: "#ffffff",
 			},
 		})
@@ -208,8 +208,10 @@ export class Preload extends Phaser.Scene {
 			y: 300,
 			text: "Start",
 			style: {
-				font: "50px monospace",
+				font: "50px VT323",
 				fill: "#ffffff",
+				stroke: "#000",
+				strokeThickness: 8,
 			},
 		})
 		startText.setOrigin(0.5, 0.5)

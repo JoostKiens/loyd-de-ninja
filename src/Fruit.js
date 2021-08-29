@@ -12,7 +12,7 @@ export class Fruit extends Phaser.GameObjects.Container {
     super(scene, x - 32, y - 32)
     this.sprite = new Phaser.GameObjects.Sprite(scene, 32, 32, type)
     this.text = new Phaser.GameObjects.Text(scene, 0, 0, fruitsMap[type], {
-			font: "20px monospace",
+			font: "30px VT323",
 			fill: "#ffffff",
 			stroke: "#000",
 			strokeThickness: 4,

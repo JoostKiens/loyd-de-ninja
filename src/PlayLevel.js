@@ -9,10 +9,12 @@ export class PlayLevel extends Phaser.Scene {
 	constructor() {
 		super("PlayGame")
 	}
+
 	create() {
 		this.cameraPrevX = 0
 		this.scoreCount = { fruits: 0, distance: 0}
 
+		this.background = new Background(this, 0, 0)
 		const { platform, map } = this.createPlatform()
 		this.player = new Player(this, 100, this.sys.canvas.height / 2)
 
@@ -22,6 +24,13 @@ export class PlayLevel extends Phaser.Scene {
 		const powerUpObjects = map.objects.find((x) => x.name === "powerUps")
 		this.powerUps = powerUpObjects.objects.map(
 			({ x, y }) => new PowerUp(this, x, y)
+		)
+
+		this.score = new Score(
+			this,
+			10,
+			this.sys.canvas.height - 70,
+			this.scoreCount.fruits + this.scoreCount.distance
 		)
 
 		// Player hits PowerUp
@@ -46,12 +55,6 @@ export class PlayLevel extends Phaser.Scene {
 		camera.setBounds(0, 0, map.widthInPixels, this.sys.canvas.height)
 		camera.startFollow(this.player)
 
-		this.score = new Score(
-			this,
-			10,
-			this.sys.canvas.height - 60,
-			this.scoreCount.fruits + this.scoreCount.distance
-		)
 		// Jump on pointerdown
 		this.input.on("pointerdown", () => {
 			this.player.jump()
@@ -84,7 +87,7 @@ export class PlayLevel extends Phaser.Scene {
 		)
 		const noaArtwork = map.addTilesetImage("noaArtwork", "noaArtwork")
 		const farGrounds = map.addTilesetImage("farGrounds", "farGrounds")
-		this.background = new Background(this, 0, 0)
+
 		map.createLayer("noaLayer2", noaArtwork, 0, 0)
 		map.createLayer("noaLayer1", noaArtwork, 0, 0)
 		map.createLayer("trees", tileset, 0, 0)
