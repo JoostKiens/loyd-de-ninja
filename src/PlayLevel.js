@@ -4,10 +4,13 @@ import { PowerUp } from './PowerUp'
 import { Player } from './Player'
 import { Fruit } from "./Fruit"
 import { Score } from './Score'
+import { GameOver } from './GameOver'
 
 export class PlayLevel extends Phaser.Scene {
 	constructor() {
 		super("PlayGame")
+
+		this.isGameOver = false
 	}
 
 	create() {
@@ -64,14 +67,17 @@ export class PlayLevel extends Phaser.Scene {
 	update(x) {
 		if (this.player.y > this.sys.canvas.height) {
 			// Dead
-			this.scene.start("PlayGame")
+			this.player.die()
+			this.gameOver()
+			// this.scene.start("PlayGame")
 			return
 		}
 
+		this.player.update()
 		this.background.update(this.cameras.main.scrollX - this.cameraPrevX)
 		this.cameraPrevX = this.cameras.main.scrollX
 		this.scoreCount.distance = Math.round(this.cameras.main.scrollX / 10)
-		this.player.update()
+
 		this.score.update(this.scoreCount.fruits + this.scoreCount.distance)
 	}
 
@@ -97,5 +103,12 @@ export class PlayLevel extends Phaser.Scene {
 		const platform = map.createLayer("platform", [tileset, noaArtwork], 0, 0)
 		platform.setCollisionByProperty({ collides: true })
 		return { platform, map }
+	}
+
+	gameOver() {
+		if (!this.isGameOver) {
+			this.isGameOver = true
+			new GameOver(this)
+		}
 	}
 }

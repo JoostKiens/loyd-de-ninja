@@ -2,10 +2,10 @@ import Phaser from "phaser"
 
 const initialJumpVelocityY = 350
 const maxJumps = 2
-const decelerateInAir = 1.5
-const decelerateOnGround = 3.5
+const decelerateInAir = 3.5
+const decelerateOnGround = 5.5
 const baseVelocityX = 300
-const powerUpVelocityX = 200
+const powerUpVelocityX = 50
 
 export class Player extends Phaser.GameObjects.Sprite {
 	constructor(scene, x, y) {
@@ -14,6 +14,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 		this.isRunning = false
 		this.currentJumps = 0
 		this.speed = 0
+		this.isDead = false
 
 		scene.add.existing(this)
 		scene.physics.world.enable(this)
@@ -31,11 +32,10 @@ export class Player extends Phaser.GameObjects.Sprite {
 			this.anims.stop()
 		}
 
-		this.speed = Math.max(
+		this.speed = this.isDead ? 0 : Math.max(
 			baseVelocityX,
 			this.speed - (onGround ? decelerateOnGround : decelerateInAir)
 		)
-
 
 		this.body.setVelocityX(this.speed)
 	}
@@ -54,5 +54,14 @@ export class Player extends Phaser.GameObjects.Sprite {
 			this.anims.play("jump", true)
 			this.currentJumps++
 		}
+	}
+
+	die() {
+		if (this.isDead) return
+
+		this.isDead = true
+		this.active = false
+		this.body.setVelocityX(0)
+		this.scene.sound.play("dieSound")
 	}
 }

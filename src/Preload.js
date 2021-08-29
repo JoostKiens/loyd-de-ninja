@@ -2,7 +2,8 @@ import Phaser from "phaser"
 import farGrounds from "./assets/farGrounds.png"
 import noaArtwork from "./assets/noaArtwork.png"
 import mainTileset from './assets/main_tileset.extruded.png'
-import fruitSound from "./assets/power_up_04.mp3"
+import fruitSound from "./assets/fruit.mp3"
+import dieSound from "./assets/die.mp3"
 import powerUpSound from "./assets/powerUp.mp3"
 import logo from "./assets/logo.png"
 
@@ -35,6 +36,7 @@ export class Preload extends Phaser.Scene {
 		this.load.tilemapTiledJSON("level2", "level_3.json")
 		this.load.audio("powerUpSound", powerUpSound)
 		this.load.audio("fruitSound", fruitSound)
+		this.load.audio("dieSound", dieSound)
 	}
 
 	create() {
