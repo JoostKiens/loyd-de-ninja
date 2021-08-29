@@ -11,7 +11,16 @@ export class PowerUp extends Phaser.GameObjects.Container {
 		this.fireball = new Fireball(scene, 0, 0)
     this.explosion = new Explosion(scene, 0, 0)
     this.explosion.visible = false
-		this.add([this.fireball, this.explosion])
+
+    this.text = new Phaser.GameObjects.Text(scene, 0, 0, 'Power Up', {
+			font: "20px VT323, monospace",
+			fill: "#ffffff",
+			stroke: "#000",
+			strokeThickness: 3,
+		})
+    this.text.setOrigin(0, 1)
+
+		this.add([this.fireball, this.explosion, this.text])
 
 		scene.add.existing(this)
 		scene.physics.world.enable(this)
@@ -19,11 +28,18 @@ export class PowerUp extends Phaser.GameObjects.Container {
 	}
 
   hit() {
-    console.log('hit')
     this.isHit = true
     this.explosion.visible = true
     this.explosion.anims.play('explode')
     this.fireball.visible = false
+
+    	this.scene.tweens.add({
+				targets: this.text,
+				alpha: 0,
+        scale: 3,
+				ease: "Sine.easeIn",
+				duration: 200,
+			})
   }
 }
 
