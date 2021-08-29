@@ -94,7 +94,7 @@ export class PlayLevel extends Phaser.Scene {
 		map.createLayer("farGrounds", farGrounds, 0, 0)
 		map.createLayer("rockyBg", tileset, 0, 0)
 
-		const platform = map.createLayer("platform", tileset, 0, 0)
+		const platform = map.createLayer("platform", [tileset, noaArtwork], 0, 0)
 		platform.setCollisionByProperty({ collides: true })
 		return { platform, map }
 	}
