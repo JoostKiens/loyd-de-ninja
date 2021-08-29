@@ -36,7 +36,7 @@ export class PlayLevel extends Phaser.Scene {
 		// Player hits PowerUp
 		this.physics.add.overlap(this.player, this.powerUps, (player, powerUp) => {
 			player.powerUp()
-			powerUp.destroy()
+			if (!powerUp.isHit) { powerUp.hit() }
 		})
 
 		// Player hits Fruit

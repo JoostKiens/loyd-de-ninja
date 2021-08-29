@@ -52,6 +52,8 @@ export class Preload extends Phaser.Scene {
 			frames: explosion1,
 			frameRate: 60,
 			repeat: 0,
+			// showOnStart: true,
+			// hideOnComplete: true,
 		})
 
 		// Move to PowerUp
@@ -62,6 +64,7 @@ export class Preload extends Phaser.Scene {
 			prefix: "fireball_",
 			suffix: ".png",
 		})
+
 		this.anims.create({
 			key: "play",
 			frames: fireballFrames,
