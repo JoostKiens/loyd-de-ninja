@@ -62,6 +62,5 @@ export class Player extends Phaser.GameObjects.Sprite {
 		this.isDead = true
 		this.active = false
 		this.body.setVelocityX(0)
-		this.scene.sound.play("dieSound")
 	}
 }

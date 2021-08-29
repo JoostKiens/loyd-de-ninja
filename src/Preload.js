@@ -212,14 +212,13 @@ export class Preload extends Phaser.Scene {
 				strokeThickness: 8,
 			},
 		})
-		startText.setOrigin(0.5, 0.5)
-		startText
-			.setInteractive({
-    		useHandCursor: true
-			})
-			.on("pointerdown", () => {
-				startText.destroy()
-				this.scene.start("PlayGame")
-			})
+		.setOrigin(0.5, 0.5)
+		.setInteractive({
+			useHandCursor: true
+		})
+		.on("pointerdown", () => {
+			startText.destroy()
+			this.scene.start("PlayGame")
+		})
 	}
 }
