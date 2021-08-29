@@ -10,9 +10,10 @@ const fruitsMap = {
 export class Fruit extends Phaser.GameObjects.Container {
 	constructor(scene, x, y, type) {
     super(scene, x - 32, y - 32)
-    this.sprite = new Phaser.GameObjects.Sprite(scene, 32, 32, type)
+    this.sprite = new Phaser.GameObjects.TileSprite(scene, 32, 32, 0, 0, "sprites", `${type}.png`)
+
     this.text = new Phaser.GameObjects.Text(scene, 0, 0, fruitsMap[type], {
-			font: "30px VT323",
+			font: "30px VT323, monospace",
 			fill: "#ffffff",
 			stroke: "#000",
 			strokeThickness: 4,

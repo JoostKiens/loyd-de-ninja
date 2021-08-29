@@ -7,13 +7,11 @@ const decelerateOnGround = 4.5
 const baseVelocityX = 300
 const powerUpVelocityX = 800
 
-const scale = 0.14906832298136646
 export class Player extends Phaser.GameObjects.Sprite {
 	constructor(scene, x, y) {
 		super(scene, x, y, "sprites", "run/Run__000.png")
 		this.name = "player"
 		this.isRunning = false
-		this.setScale(scale)
 		this.currentJumps = 0
 		this.speed = 0
 

@@ -1,15 +1,8 @@
 import Phaser from "phaser"
-import sky from "./assets/sky.png"
-import sea from "./assets/sea.png"
-import clouds from "./assets/clouds.png"
 import farGrounds from "./assets/farGrounds.png"
 import noaArtwork from "./assets/noaArtwork.png"
 import mainTileset from './assets/main_tileset.extruded.png'
 import logo from "./assets/logo.png"
-import chilli from "./assets/chilli.png"
-import orange from "./assets/orange.png"
-import broccoli from "./assets/broccoli.png"
-import strawberry from "./assets/strawberry.png"
 
 export class Preload extends Phaser.Scene {
 	constructor() {
@@ -31,17 +24,9 @@ export class Preload extends Phaser.Scene {
 		this.loadingUI()
 
 		this.load.image("logo", logo)
-		this.load.image("sky", sky)
-		this.load.image("sea", sea)
-		this.load.image("clouds", clouds)
 		this.load.image("farGrounds", farGrounds)
 		this.load.image('mainTileset', mainTileset)
 		this.load.image("noaArtwork", noaArtwork)
-		this.load.image("chilli", chilli)
-		this.load.image("orange", orange)
-		this.load.image("strawberry", strawberry)
-		this.load.image("broccoli", broccoli)
-		// this.load.tilemapTiledJSON("fruits", "fruits.json", ".")
 		this.load.multiatlas("sprites", "sprites.json", ".")
 		this.load.multiatlas("fireball", "fireball.json", ".")
 		this.load.multiatlas("explosion1", "explosion1.json", ".")
@@ -126,20 +111,20 @@ export class Preload extends Phaser.Scene {
 			repeat: 0,
 		})
 
-		const jumpThrowFrames = this.anims.generateFrameNames("sprites", {
-			start: 0,
-			end: 9,
-			zeroPad: 3,
-			prefix: "jumpThrow/Jump_Throw__",
-			suffix: ".png",
-		})
+		// const jumpThrowFrames = this.anims.generateFrameNames("sprites", {
+		// 	start: 0,
+		// 	end: 9,
+		// 	zeroPad: 3,
+		// 	prefix: "jumpThrow/Jump_Throw__",
+		// 	suffix: ".png",
+		// })
 
-		this.anims.create({
-			key: "jumpThrow",
-			frames: jumpThrowFrames,
-			frameRate: 10,
-			repeat: 0,
-		})
+		// this.anims.create({
+		// 	key: "jumpThrow",
+		// 	frames: jumpThrowFrames,
+		// 	frameRate: 10,
+		// 	repeat: 0,
+		// })
 	}
 
 	loadingUI() {
@@ -150,7 +135,7 @@ export class Preload extends Phaser.Scene {
 			y: height / 2 - 50,
 			text: "Loading...",
 			style: {
-				font: "20px VT323",
+				font: "20px VT323, monospace",
 				fill: "#ffffff",
 			},
 		})
@@ -161,7 +146,7 @@ export class Preload extends Phaser.Scene {
 			y: height / 2 + height / 12,
 			text: "0%",
 			style: {
-				font: "18px VT323",
+				font: "18px VT323, monospace",
 				fill: "#ffffff",
 			},
 		})
@@ -208,7 +193,7 @@ export class Preload extends Phaser.Scene {
 			y: 300,
 			text: "Start",
 			style: {
-				font: "50px VT323",
+				font: "50px VT323, monospace",
 				fill: "#ffffff",
 				stroke: "#000",
 				strokeThickness: 8,
