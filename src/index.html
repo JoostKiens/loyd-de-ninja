@@ -26,6 +26,13 @@
     body {
       background-color: #212121;
       font-family: 'VT323', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #game-container {
+      max-width: 1280px;
     }
 
     canvas {
@@ -35,6 +42,7 @@
 </head>
 <body>
   <div style="font-family:VT323; position:absolute; left:-1000px; visibility:hidden;">.</div>
+  <div id="game-container"></div>
   <script src="./game.js"></script>
 </body>
 </html>
