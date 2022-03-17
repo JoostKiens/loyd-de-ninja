@@ -12,12 +12,18 @@ export class GameOver extends Phaser.GameObjects.Container {
 
     this.scene.sound.play("dieSound")
 
-    const text = new Phaser.GameObjects.Text(scene, width / 2, height / 2, "Game Over", {
-			font: "160px VT323, monospace",
-			fill: "#ffffff",
-			stroke: "#000",
-			strokeThickness: 10,
-		}).setOrigin(0.5)
+    const text = new Phaser.GameObjects.Text(
+			scene,
+			width / 2,
+			height / 2,
+			"Game Over",
+			{
+				font: "160px ArmorPiercing",
+				fill: "#ffffff",
+				stroke: "#000",
+				strokeThickness: 10,
+			}
+		).setOrigin(0.5)
 
     const restart = new Phaser.GameObjects.Text(
 			scene,
@@ -25,7 +31,7 @@ export class GameOver extends Phaser.GameObjects.Container {
 			height / 2 + 100,
 			"Restart",
 			{
-				font: "40px VT323, monospace",
+				font: "40px ArmorPiercing",
 				fill: "#ffffff",
 				stroke: "#000",
 				strokeThickness: 8,

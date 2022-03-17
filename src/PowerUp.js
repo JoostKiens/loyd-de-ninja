@@ -12,8 +12,8 @@ export class PowerUp extends Phaser.GameObjects.Container {
     this.explosion = new Explosion(scene, 0, 0)
     this.explosion.visible = false
 
-    this.text = new Phaser.GameObjects.Text(scene, 0, 0, 'Power Up', {
-			font: "24px VT323, monospace",
+    this.text = new Phaser.GameObjects.Text(scene, 0, 0, "Power Up", {
+			font: "24px ArmorPiercing, monospace",
 			fill: "#ffffff",
 			stroke: "#000",
 			strokeThickness: 4,

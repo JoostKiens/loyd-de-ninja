@@ -220,6 +220,27 @@
 					}
 				},
 				{
+					"filename": "cherry.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 14,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 14,
+						"h": 16
+					},
+					"frame": {
+						"x": 124,
+						"y": 493,
+						"w": 14,
+						"h": 16
+					}
+				},
+				{
 					"filename": "clouds.png",
 					"rotated": false,
 					"trimmed": true,
@@ -813,6 +834,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:76bcb9f9a9157f575c7be11887d80fa3:4dec01d1dde45eb8e0ded814e59e0060:af6e57a991ea0b4b415dbcb7eb72ce12$"
+		"smartupdate": "$TexturePacker:SmartUpdate:fb0424f4cba62c5533300a9a0da325f6:3d512146bcd4ac548edf624019476373:af6e57a991ea0b4b415dbcb7eb72ce12$"
 	}
 }

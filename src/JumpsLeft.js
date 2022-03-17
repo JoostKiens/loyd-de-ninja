@@ -1,11 +1,11 @@
 import Phaser from "phaser"
 
-export class Score extends Phaser.GameObjects.Container {
+export class JumpsLeft extends Phaser.GameObjects.Container {
 	constructor(scene, x, y, score) {
 		super(scene, x, y)
 
 		this.text = new Phaser.GameObjects.Text(scene, 0, 0, score, {
-			font: "60px ArmorPiercing",
+			font: "40px ArmorPiercingItalic",
 			fill: "#ffffff",
 			stroke: "#000",
 			strokeThickness: 8,

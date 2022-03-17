@@ -24,6 +24,8 @@ export class Preload extends Phaser.Scene {
 			height / 3
 		)
 
+		console.log(this.contentBg)
+
 		this.loadingUI()
 
 		this.load.image("logo", logo)
@@ -33,7 +35,7 @@ export class Preload extends Phaser.Scene {
 		this.load.multiatlas("sprites", "sprites.json", ".")
 		this.load.multiatlas("fireball", "fireball.json", ".")
 		this.load.multiatlas("explosion1", "explosion1.json", ".")
-		this.load.tilemapTiledJSON("level2", "level_3.json")
+		this.load.tilemapTiledJSON("level1", "level_3.json")
 		this.load.audio("powerUpSound", powerUpSound)
 		this.load.audio("fruitSound", fruitSound)
 		this.load.audio("dieSound", dieSound)
@@ -62,8 +64,6 @@ export class Preload extends Phaser.Scene {
 			frames: explosion1,
 			frameRate: 60,
 			repeat: 0,
-			// showOnStart: true,
-			// hideOnComplete: true,
 		})
 
 		// Move to PowerUp
@@ -143,27 +143,6 @@ export class Preload extends Phaser.Scene {
 	loadingUI() {
 		const width = this.cameras.main.width
 		const height = this.cameras.main.height
-		const loadingText = this.make.text({
-			x: width / 2,
-			y: height / 2 - 50,
-			text: "Loading...",
-			style: {
-				font: "20px VT323, monospace",
-				fill: "#ffffff",
-			},
-		})
-		loadingText.setOrigin(0.5, 0.5)
-
-		const percentText = this.make.text({
-			x: width / 2,
-			y: height / 2 + height / 12,
-			text: "0%",
-			style: {
-				font: "18px VT323, monospace",
-				fill: "#ffffff",
-			},
-		})
-		percentText.setOrigin(0.5, 0.5)
 
 		const progressBoxWidth = width / 3
 		const progressBoxHeight = progressBoxWidth / 6
@@ -180,7 +159,6 @@ export class Preload extends Phaser.Scene {
 		)
 
 		this.load.on("progress", (value) => {
-			percentText.setText(parseInt(value * 100) + "%")
 			progressBar.clear()
 			progressBar.fillStyle(0xffffff, 1)
 			progressBar.fillRect(
@@ -194,31 +172,111 @@ export class Preload extends Phaser.Scene {
 		this.load.on("complete", () => {
 			progressBar.destroy()
 			progressBox.destroy()
-			loadingText.destroy();
-			percentText.destroy();
 			this.startUI()
 		})
 	}
 
 	startUI() {
-		const startText = this.make.text({
+		// Make this a button component which extends a custom uiText component
+		this.button = new GradientText({
+			scene: this,
 			x: this.sys.canvas.width / 2,
 			y: 300,
 			text: "Start",
-			style: {
-				font: "50px VT323, monospace",
-				fill: "#ffffff",
-				stroke: "#000",
-				strokeThickness: 8,
+			onClick: () => {
+				this.button.destroy()
+				this.scene.start("PlayGame")
 			},
 		})
-		.setOrigin(0.5, 0.5)
-		.setInteractive({
-			useHandCursor: true
+
+		this.add.existing(this.button)
+
+		// this.add.register('myButton', Button)
+		// this.add.myButton({
+		// 	scene: this,
+		// 	x: this.sys.canvas.width / 2,
+		// 	y: 300,
+		// 	text: "Start",
+		// 	onClick: () => {
+		// 		this.button.destroy()
+		// 		this.scene.start("PlayGame")
+		// 	},
+		// })
+
+		console.log(this.add)
+
+	}
+	// 	const startText = this.make
+	// 		.text({
+	// 			x: this.sys.canvas.width / 2,
+	// 			y: 300,
+	// 			text: "Start",
+	// 			style: {
+	// 				font: "50px ArmorPiercing",
+	// 				fill: "#ffffff",
+	// 				stroke: "#000",
+	// 				strokeThickness: 8,
+	// 				///shadow: new Phaser.GameObjects.Text.TextShadow(0, 0, '#fff', 20)
+	// 				// .G0, 0, '#ffffff', 4
+	// 			},
+	// 		})
+	// 		.setOrigin(0.5, 0.5)
+	// 		.setInteractive({
+	// 			useHandCursor: true,
+	// 		})
+	// 		.on("pointerdown", () => {
+	// 			startText.destroy()
+	// 			this.scene.start("PlayGame")
+	// 		})
+
+	// 		var grd = startText.context.createLinearGradient(
+	// 			0,
+	// 			0,
+	// 			0,
+	// 			startText.height
+	// 		)
+
+	// 		//  Add in 2 color stops
+	// 		grd.addColorStop(0, "#8ED6FF")
+	// 		grd.addColorStop(1, "#004CB3")
+	// 		startText.setFill(grd)
+	// }
+}
+
+class GradientText extends Phaser.GameObjects.Text {
+	constructor({scene, x, y, text, onClick}) {
+		super(scene, x, y, text, {
+			font: "50px ArmorPiercing",
+			fill: "#ffffff",
+			stroke: "#000",
+			strokeThickness: 8,
 		})
-		.on("pointerdown", () => {
-			startText.destroy()
-			this.scene.start("PlayGame")
-		})
+
+		this.setOrigin(0.5, 0.5)
+
+		if (onClick) {
+			this.setInteractive({
+				useHandCursor: true,
+			})
+			this.on("pointerover", () => {
+				this.scale = 1.1
+			})
+			this.on("pointerout", () => {
+				this.scale = 1
+			})
+			this.on("pointerdown", onClick)
+		}
+
+		const grd = this.context.createLinearGradient(
+			0,
+			0,
+			0,
+			this.height
+		)
+
+		//  Add in 2 color stops
+		grd.addColorStop(0, "#8ED6FF")
+		grd.addColorStop(1, "#004CB3")
+		this.setFill(grd)
 	}
 }

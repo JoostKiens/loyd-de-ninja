@@ -1,7 +1,7 @@
 import Phaser from "phaser"
 import { Preload } from './Preload'
 import { PlayLevel } from "./PlayLevel"
-
+import "./styles.css"
 window.onload = function () {
 	new Phaser.Game({
 		type: Phaser.AUTO,

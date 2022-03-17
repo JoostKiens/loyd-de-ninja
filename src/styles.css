@@ -1,0 +1,14 @@
+@font-face {
+  font-family: "ArmorPiercing";
+  src: url("./fonts/ArmorPiercing.woff") format("woff");
+}
+
+@font-face {
+  font-family: "ArmorPiercingItalic";
+  src: url("./fonts/ArmorPiercingItalic.woff") format("woff");
+  font-style: italic;
+}
+
+body {
+  font-family: ArmorPiercing;
+}

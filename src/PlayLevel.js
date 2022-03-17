@@ -4,6 +4,7 @@ import { PowerUp } from './PowerUp'
 import { Player } from './Player'
 import { Fruit } from "./Fruit"
 import { Score } from './Score'
+import { JumpsLeft } from "./JumpsLeft"
 import { GameOver } from './GameOver'
 
 export class PlayLevel extends Phaser.Scene {
@@ -34,6 +35,13 @@ export class PlayLevel extends Phaser.Scene {
 			10,
 			this.sys.canvas.height - 70,
 			this.scoreCount.fruits + this.scoreCount.distance
+		)
+
+		this.jumpsLeft = new JumpsLeft(
+			this,
+			this.sys.canvas.width - 70,
+			10,
+			2 - this.player.currentJumps
 		)
 
 		// Player hits PowerUp
@@ -77,12 +85,13 @@ export class PlayLevel extends Phaser.Scene {
 		this.background.update(this.cameras.main.scrollX - this.cameraPrevX)
 		this.cameraPrevX = this.cameras.main.scrollX
 		this.scoreCount.distance = Math.round(this.cameras.main.scrollX / 10)
+		this.jumpsLeft.update(2 - this.player.currentJumps)
 
 		this.score.update(this.scoreCount.fruits + this.scoreCount.distance)
 	}
 
 	createPlatform() {
-		const map = this.make.tilemap({ key: "level2" })
+		const map = this.make.tilemap({ key: "level1" })
 		const tileset = map.addTilesetImage(
 			"bg_tileset",
 			"mainTileset",
