@@ -5,7 +5,7 @@ export class JumpsLeft extends Phaser.GameObjects.Container {
 		super(scene, x, y)
 
 		this.text = new Phaser.GameObjects.Text(scene, 0, 0, score, {
-			font: "40px ArmorPiercingItalic",
+			font: "40px ArmorPiercing",
 			fill: "#ffffff",
 			stroke: "#000",
 			strokeThickness: 8,

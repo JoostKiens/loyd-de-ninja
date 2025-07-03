@@ -178,73 +178,23 @@ export class Preload extends Phaser.Scene {
 
 	startUI() {
 		// Make this a button component which extends a custom uiText component
-		this.button = new GradientText({
+		const startButton = new GradientText({
 			scene: this,
 			x: this.sys.canvas.width / 2,
 			y: 300,
 			text: "Start",
 			onClick: () => {
-				this.button.destroy()
+				startButton.destroy()
 				this.scene.start("PlayGame")
 			},
 		})
 
-		this.add.existing(this.button)
-
-		// this.add.register('myButton', Button)
-		// this.add.myButton({
-		// 	scene: this,
-		// 	x: this.sys.canvas.width / 2,
-		// 	y: 300,
-		// 	text: "Start",
-		// 	onClick: () => {
-		// 		this.button.destroy()
-		// 		this.scene.start("PlayGame")
-		// 	},
-		// })
-
-		console.log(this.add)
-
+		this.add.existing(startButton)
 	}
-	// 	const startText = this.make
-	// 		.text({
-	// 			x: this.sys.canvas.width / 2,
-	// 			y: 300,
-	// 			text: "Start",
-	// 			style: {
-	// 				font: "50px ArmorPiercing",
-	// 				fill: "#ffffff",
-	// 				stroke: "#000",
-	// 				strokeThickness: 8,
-	// 				///shadow: new Phaser.GameObjects.Text.TextShadow(0, 0, '#fff', 20)
-	// 				// .G0, 0, '#ffffff', 4
-	// 			},
-	// 		})
-	// 		.setOrigin(0.5, 0.5)
-	// 		.setInteractive({
-	// 			useHandCursor: true,
-	// 		})
-	// 		.on("pointerdown", () => {
-	// 			startText.destroy()
-	// 			this.scene.start("PlayGame")
-	// 		})
-
-	// 		var grd = startText.context.createLinearGradient(
-	// 			0,
-	// 			0,
-	// 			0,
-	// 			startText.height
-	// 		)
-
-	// 		//  Add in 2 color stops
-	// 		grd.addColorStop(0, "#8ED6FF")
-	// 		grd.addColorStop(1, "#004CB3")
-	// 		startText.setFill(grd)
-	// }
 }
 
 class GradientText extends Phaser.GameObjects.Text {
-	constructor({scene, x, y, text, onClick}) {
+	constructor({ scene, x, y, text, onClick }) {
 		super(scene, x, y, text, {
 			font: "50px ArmorPiercing",
 			fill: "#ffffff",
@@ -253,30 +203,28 @@ class GradientText extends Phaser.GameObjects.Text {
 		})
 
 		this.setOrigin(0.5, 0.5)
+		this.addGradient()
+		if (onClick) this.makeButton(onClick)
+	}
 
-		if (onClick) {
-			this.setInteractive({
-				useHandCursor: true,
-			})
-			this.on("pointerover", () => {
-				this.scale = 1.1
-			})
-			this.on("pointerout", () => {
-				this.scale = 1
-			})
-			this.on("pointerdown", onClick)
-		}
+	addGradient() {
+		const grd = this.context.createLinearGradient(0, 0, 0, this.height)
 
-		const grd = this.context.createLinearGradient(
-			0,
-			0,
-			0,
-			this.height
-		)
-
-		//  Add in 2 color stops
 		grd.addColorStop(0, "#8ED6FF")
 		grd.addColorStop(1, "#004CB3")
 		this.setFill(grd)
+	}
+
+	makeButton(onClick) {
+		this.setInteractive({
+			useHandCursor: true,
+		})
+		this.on("pointerover", () => {
+			this.scale = 1.1
+		})
+		this.on("pointerout", () => {
+			this.scale = 1
+		})
+		this.on("pointerdown", onClick)
 	}
 }
